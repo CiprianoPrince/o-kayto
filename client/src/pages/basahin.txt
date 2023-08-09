@@ -1,0 +1,3 @@
+dito lalagay mga component na SPECIFIC lang sa pages na yon eg. loginform para sa login
+
+"SPECIFIC" meaning makikita mo sya sa isang page
