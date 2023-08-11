@@ -1,21 +1,20 @@
 const db = require("../models")
-const User = db.User
 const Cart = db.Cart
 const CartDetail = db.CartDetail
 
-exports.create = (request, response) => {
+exports.create = async (request, response) => {
   const hasAllValue = Object.values(request.body).every(Boolean)
 
   if (!hasAllValue) {
     response.status(400).send({
-      message: `User data cannot be empty.`,
+      message: `Cart data cannot be empty.`,
       success: false,
       errorCode: "ERR9001",
     })
-    return response.send(request.body)
+    return response.send()
   }
 
-  User.create(request.body)
+  Cart.create(request.body)
     .then((data) => {
       response.status(201).send({
         message: `New User created successfully`,
@@ -33,37 +32,7 @@ exports.create = (request, response) => {
 }
 
 exports.findAll = (request, response) => {
-  User.findAll({ where: "" })
-    .then((data) => {
-      response.status(200).send({
-        message: `Tutorial${
-          data.length > 1 ? "s" : ""
-        } has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Retreiving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
-}
-
-exports.findUserCart = (request, response) => {
-  const userID = request.params.userID
-  User.findAll({
-    where: { userID },
-    include: [
-      {
-        model: Cart,
-        required: false,
-        include: [CartDetail],
-      },
-    ],
-  })
+  Cart.findAll({ where: "" })
     .then((data) => {
       response.status(200).send({
         message: `Tutorial${
@@ -83,25 +52,24 @@ exports.findUserCart = (request, response) => {
 }
 
 exports.findByPk = (request, response) => {
-  const userID = request.params.userID
-  console.log(userID)
-  User.findByPk(userID)
+  const id = request.params.id
+  User.findByPk(id)
     .then((data) => {
       if (!data) {
-        return response.status(400).send({
-          message: `Tutorial data does not exist. userID: ${userID} `,
+        response.status(400).send({
+          message: `Tutorial data does not exist. id: ${id} `,
           success: false,
         })
       }
-      return response.status(200).send({
+      response.status(200).send({
         message: `Tutorial has been retrieved successfully`,
         success: true,
         data,
       })
     })
     .catch((error) => {
-      return response.status(500).send({
-        message: `Retreiving of User data failed. ${error},`,
+      response.status(500).send({
+        message: `Retreiving of Tutorial data failed. Error: ${error},`,
         success: false,
         errorCode: "ERR9001",
       })

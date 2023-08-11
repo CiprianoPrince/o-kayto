@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Cart, { foreignKey: "cartID" })
     }
   }
   CartDetail.init(
@@ -17,10 +18,15 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
       cartID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "carts",
+          key: "cartID",
+        },
       },
       productID: {
         allowNull: false,

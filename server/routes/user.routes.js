@@ -1,20 +1,21 @@
 module.exports = (app) => {
-  const users = require("../controllers/user.controller")
-  const { auth } = require("../middleware")
+  const controller = require("../controllers/user.controller")
 
   const router = require("express").Router()
 
-  router.post("/", auth, users.create)
+  router.post("/", controller.create)
 
-  router.get("/", users.findAll)
+  router.get("/", controller.findAll)
 
-  router.get("/:id", users.findByPk)
+  router.get("/:userID", controller.findUserCart)
 
-  router.put("/:id", users.update)
+  router.get("/:userID", controller.findByPk)
 
-  router.delete("/", users.deleteAll)
+  router.put("/:userID", controller.update)
 
-  router.delete("/:id", users.deleteOne)
+  router.delete("/", controller.deleteAll)
+
+  router.delete("/:userID", controller.deleteOne)
 
   app.use("/api/users", router)
 }
