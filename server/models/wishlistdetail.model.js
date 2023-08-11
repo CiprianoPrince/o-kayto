@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict"
+const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
   class WishlistDetail extends Model {
     /**
@@ -13,13 +11,26 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  WishlistDetail.init({
-    wishlistDetailID: DataTypes.UUID,
-    wistlistID: DataTypes.UUID,
-    productID: DataTypes.UUID
-  }, {
-    sequelize,
-    modelName: 'WishlistDetail',
-  });
-  return WishlistDetail;
-};
+  WishlistDetail.init(
+    {
+      wishlistDetailID: {
+        primaryKey: true,
+        allowNull: false,
+        type: DataTypes.UUID,
+      },
+      wistlistID: {
+        allowNull: false,
+        type: DataTypes.UUID,
+      },
+      productID: {
+        allowNull: false,
+        type: DataTypes.UUID,
+      },
+    },
+    {
+      sequelize,
+      modelName: "WishlistDetail",
+    }
+  )
+  return WishlistDetail
+}
