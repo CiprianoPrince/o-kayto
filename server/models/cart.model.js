@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
   Cart.init(
     {
       cartID: {
-        allowNull: false,
         primaryKey: true,
+        allowNull: false,
         type: DataTypes.UUID,
       },
       userID: {
