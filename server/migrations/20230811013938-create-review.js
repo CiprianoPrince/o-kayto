@@ -1,40 +1,48 @@
-'use strict';
+"use strict"
+
+const { DataTypes } = require("sequelize")
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    await queryInterface.createTable("Reviews", {
       reviewID: {
-        type: Sequelize.UUID
+        primaryKey: true,
+        allowNull: false,
+        type: Sequelize.UUID,
       },
       userID: {
-        type: Sequelize.UUID
+        allowNull: false,
+        type: Sequelize.UUID,
       },
       productID: {
-        type: Sequelize.UUID
+        allowNull: false,
+        type: Sequelize.UUID,
       },
       rating: {
-        type: Sequelize.ENUM
+        allowNull: true,
+        type: Sequelize.ENUM,
+        values: [1, 2, 3, 4, 5],
       },
       comment: {
-        type: Sequelize.STRING
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      datePosted: {
+        allowNull: false,
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        type: Sequelize.DATE,
+      },
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
-  }
-};
+    await queryInterface.dropTable("Reviews")
+  },
+}
