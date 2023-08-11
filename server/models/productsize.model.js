@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Product, { foreignKey: "productID" })
+      this.belongsTo(models.Size, { foreignKey: "sizeID" })
     }
   }
   ProductSize.init(
@@ -17,14 +19,23 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
       productID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "products",
+          key: "productID",
+        },
       },
       sizeID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "sizes",
+          key: "sizeID",
+        },
       },
       quantityInStock: {
         allowNull: false,

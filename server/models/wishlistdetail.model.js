@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Wishlist, { foreignKey: "wistlistID" })
+      this.belongsTo(models.Product, { foreignKey: "productID" })
     }
   }
   WishlistDetail.init(
@@ -17,14 +19,23 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
       wistlistID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "wishlists",
+          key: "wistlistID",
+        },
       },
       productID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "products",
+          key: "productID",
+        },
       },
     },
     {

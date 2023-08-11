@@ -1,5 +1,4 @@
 "use strict"
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -21,6 +20,10 @@ module.exports = {
       productID: {
         allowNull: false,
         type: Sequelize.UUID,
+        references: {
+          model: "products",
+          key: "productID",
+        },
       },
       quantity: {
         allowNull: false,

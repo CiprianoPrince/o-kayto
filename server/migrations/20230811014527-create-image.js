@@ -9,11 +9,16 @@ module.exports = {
       imageID: {
         primaryKey: true,
         allowNull: false,
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       productID: {
         allowNull: false,
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
+        references: {
+          model: "products",
+          key: "productID",
+        },
       },
       imagePath: {
         allowNull: true,
