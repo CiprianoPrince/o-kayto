@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Cart, { foreignKey: "cartID" })
+      this.belongsTo(models.Product, { foreignKey: "productID" })
     }
   }
   CartDetail.init(
@@ -31,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       productID: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "products",
+          key: "productID",
+        },
       },
       quantity: {
         allowNull: false,
