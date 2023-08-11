@@ -1,40 +1,43 @@
-'use strict';
+"use strict"
+
+const { DataTypes } = require("sequelize")
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('OrderDetails', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    await queryInterface.createTable("OrderDetails", {
       orderDetailID: {
-        type: Sequelize.UUID
+        primaryKey: true,
+        allowNull: false,
+        type: DataTypes.UUID,
       },
       orderID: {
-        type: Sequelize.UUID
+        allowNull: false,
+        type: DataTypes.UUID,
       },
       productID: {
-        type: Sequelize.UUID
+        allowNull: false,
+        type: DataTypes.UUID,
       },
       quantity: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
       },
       price: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        type: Sequelize.DATE,
+      },
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('OrderDetails');
-  }
-};
+    await queryInterface.dropTable("OrderDetails")
+  },
+}
