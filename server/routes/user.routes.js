@@ -7,7 +7,7 @@ module.exports = (app) => {
 
   router.get("/", controller.findAll)
 
-  router.get("/:userID", controller.findUserCart)
+  // router.get("/:userID", controller.findUserCart)
 
   router.get("/:userID", controller.findByPk)
 

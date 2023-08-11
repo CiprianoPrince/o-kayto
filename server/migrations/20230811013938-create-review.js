@@ -27,8 +27,13 @@ module.exports = {
       },
       rating: {
         allowNull: true,
-        type: Sequelize.ENUM,
-        values: [1, 2, 3, 4, 5],
+        type: Sequelize.INTEGER,
+        validate: {
+          isIn: {
+            args: [[1, 2, 3, 4, 5]],
+            msg: "Invalid value for rating",
+          },
+        },
       },
       comment: {
         allowNull: true,

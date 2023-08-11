@@ -82,30 +82,32 @@ exports.findUserCart = (request, response) => {
     })
 }
 
-exports.findByPk = (request, response) => {
+exports.findByPk = async (request, response) => {
   const userID = request.params.userID
-  console.log(userID)
-  User.findByPk(userID)
-    .then((data) => {
-      if (!data) {
-        return response.status(400).send({
-          message: `Tutorial data does not exist. userID: ${userID} `,
-          success: false,
-        })
-      }
-      return response.status(200).send({
-        message: `Tutorial has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      return response.status(500).send({
-        message: `Retreiving of User data failed. ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
+
+  const user = await User.findByPk(userID)
+  const carts = await user.getCarts()
+  response.send(carts[0].getCartDetails())
+  // .then((data) => {
+  //   if (!data) {
+  //     return response.status(400).send({
+  //       message: `Tutorial data does not exist. userID: ${userID} `,
+  //       success: false,
+  //     })
+  //   }
+  //   return response.status(200).send({
+  //     message: `Tutorial has been retrieved successfully`,
+  //     success: true,
+  //     data,
+  //   })
+  // })
+  // .catch((error) => {
+  //   return response.status(500).send({
+  //     message: `Retreiving of User data failed. ${error},`,
+  //     success: false,
+  //     errorCode: "ERR9001",
+  //   })
+  // })
 }
 
 exports.update = (request, response) => {
