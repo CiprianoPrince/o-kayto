@@ -1,7 +1,7 @@
 const db = require("../models")
-const User = db.User
-const Cart = db.Cart
-const CartDetail = db.CartDetail
+const UserModel = db.User
+const CartModel = db.Cart
+const CartDetailModel = db.CartDetail
 
 exports.create = (request, response) => {
   const hasAllValue = Object.values(request.body).every(Boolean)
@@ -85,9 +85,9 @@ exports.findUserCart = (request, response) => {
 exports.findByPk = async (request, response) => {
   const userID = request.params.userID
 
-  const user = await User.findByPk(userID)
+  const user = await UserModel.findByPk(userID)
   const carts = await user.getCarts()
-  response.send(carts[0].getCartDetails())
+  response.send(carts.map((cart) => cart.getCartDetail()))
   // .then((data) => {
   //   if (!data) {
   //     return response.status(400).send({
