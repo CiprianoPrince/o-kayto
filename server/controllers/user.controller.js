@@ -1,5 +1,5 @@
 const db = require("../models")
-const users = db.user
+const User = db.User
 
 exports.create = (request, response) => {
   const hasAllValue = request.body.id && request.body.name && request.body.email
@@ -17,8 +17,7 @@ exports.create = (request, response) => {
   const { id, name, email } = request.body
   const user = { id, name, email }
   console.log(user)
-  users
-    .create(user)
+  User.create(user)
     .then((data) => {
       response.status(201).send({
         message: `New User created successfully`,
@@ -36,50 +35,48 @@ exports.create = (request, response) => {
 }
 
 exports.findAll = (request, response) => {
-  // users
-  //   .findAll({ where: "" })
-  //   .then((data) => {
-  //     response.status(200).send({
-  //       message: `Tutorial${
-  //         data.length > 1 ? "s" : ""
-  //       } has been retrieved successfully`,
-  //       success: true,
-  //       data,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     response.status(500).send({
-  //       message: `Retreiving of Tutorial data failed. Error: ${error},`,
-  //       success: false,
-  //       errorCode: "ERR9001",
-  //     })
-  //   })
+  User.findAll({ where: "" })
+    .then((data) => {
+      response.status(200).send({
+        message: `Tutorial${
+          data.length > 1 ? "s" : ""
+        } has been retrieved successfully`,
+        success: true,
+        data,
+      })
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: `Retreiving of Tutorial data failed. Error: ${error},`,
+        success: false,
+        errorCode: "ERR9001",
+      })
+    })
 }
 
 exports.findByPk = (request, response) => {
-  // const id = request.params.id
-  // users
-  //   .findByPk(id)
-  //   .then((data) => {
-  //     if (!data) {
-  //       response.status(400).send({
-  //         message: `Tutorial data does not exist. id: ${id} `,
-  //         success: false,
-  //       })
-  //     }
-  //     response.status(200).send({
-  //       message: `Tutorial has been retrieved successfully`,
-  //       success: true,
-  //       data,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     response.status(500).send({
-  //       message: `Retreiving of Tutorial data failed. Error: ${error},`,
-  //       success: false,
-  //       errorCode: "ERR9001",
-  //     })
-  //   })
+  const id = request.params.id
+  User.findByPk(id)
+    .then((data) => {
+      if (!data) {
+        response.status(400).send({
+          message: `Tutorial data does not exist. id: ${id} `,
+          success: false,
+        })
+      }
+      response.status(200).send({
+        message: `Tutorial has been retrieved successfully`,
+        success: true,
+        data,
+      })
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: `Retreiving of Tutorial data failed. Error: ${error},`,
+        success: false,
+        errorCode: "ERR9001",
+      })
+    })
 }
 
 exports.update = (request, response) => {
@@ -96,8 +93,7 @@ exports.update = (request, response) => {
   const { title, description, published } = request.body
   const newUserData = { title, description, published }
 
-  users
-    .update(newUserData, { where: { id: id } })
+  User.update(newUserData, { where: { id: id } })
     .then((data) => {
       const affectedNumRow = data[0]
       if (!affectedNumRow) {
@@ -124,58 +120,56 @@ exports.update = (request, response) => {
 }
 
 exports.deleteAll = (request, response) => {
-  // users
-  //   .destroy({ where: {} })
-  //   .then(async (data) => {
-  //     const deletedRow = await data
-  //     if (!deletedRow) {
-  //       response.status(400).send({
-  //         message: `Tutorial does not have data`,
-  //         success: false,
-  //         deletedRow: deletedRow,
-  //       })
-  //       return
-  //     }
-  //     response.status(200).send({
-  //       message: `Tutorial deleted successfully`,
-  //       success: true,
-  //       deletedRow: deletedRow,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     response.status(500).send({
-  //       message: `Deleting of Tutorial data failed. Error: ${error},`,
-  //       success: false,
-  //       errorCode: "ERR9001",
-  //     })
-  //   })
+  User.destroy({ where: {} })
+    .then(async (data) => {
+      const deletedRow = await data
+      if (!deletedRow) {
+        response.status(400).send({
+          message: `Tutorial does not have data`,
+          success: false,
+          deletedRow: deletedRow,
+        })
+        return
+      }
+      response.status(200).send({
+        message: `Tutorial deleted successfully`,
+        success: true,
+        deletedRow: deletedRow,
+      })
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: `Deleting of Tutorial data failed. Error: ${error},`,
+        success: false,
+        errorCode: "ERR9001",
+      })
+    })
 }
 
 exports.deleteOne = (request, response) => {
-  // const id = request.params.id
-  // users
-  //   .destroy({ where: { id: id } })
-  //   .then(async (data) => {
-  //     const deletedRow = await data
-  //     if (!deletedRow) {
-  //       response.status(400).send({
-  //         message: `Tutorial data does not exist. id: ${id} `,
-  //         success: false,
-  //         deletedRow: deletedRow,
-  //       })
-  //       return
-  //     }
-  //     response.status(200).send({
-  //       message: `Tutorial deleted successfully`,
-  //       success: true,
-  //       deletedRow: deletedRow,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     response.status(500).send({
-  //       message: `Deleting of Tutorial data failed. Error: ${error},`,
-  //       success: false,
-  //       errorCode: "ERR9001",
-  //     })
-  //   })
+  const id = request.params.id
+  User.destroy({ where: { id: id } })
+    .then(async (data) => {
+      const deletedRow = await data
+      if (!deletedRow) {
+        response.status(400).send({
+          message: `Tutorial data does not exist. id: ${id} `,
+          success: false,
+          deletedRow: deletedRow,
+        })
+        return
+      }
+      response.status(200).send({
+        message: `Tutorial deleted successfully`,
+        success: true,
+        deletedRow: deletedRow,
+      })
+    })
+    .catch((error) => {
+      response.status(500).send({
+        message: `Deleting of Tutorial data failed. Error: ${error},`,
+        success: false,
+        errorCode: "ERR9001",
+      })
+    })
 }
