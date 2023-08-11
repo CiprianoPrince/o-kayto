@@ -9,14 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.Cart, { foreignKey: "userID" })
+      this.hasMany(models.Order, { foreignKey: "userID" })
+      this.hasMany(models.Wishlist, { foreignKey: "userID" })
     }
   }
   User.init(
     {
       userID: {
-        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
       firstName: {
         allowNull: false,
@@ -27,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       email: {
+        unique: true,
         allowNull: false,
         type: DataTypes.STRING,
       },
@@ -37,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       phone: {
         allowNull: true,
         type: DataTypes.BIGINT,
+      },
+      dateRegistered: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

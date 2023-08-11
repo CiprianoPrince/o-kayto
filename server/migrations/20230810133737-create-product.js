@@ -1,15 +1,13 @@
-'use strict';
-
-const { DataTypes } = require("sequelize");
-
+"use strict"
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Products", {
       productID: {
-        allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID,
+        allowNull: false,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       name: {
         allowNull: false,
@@ -29,7 +27,7 @@ module.exports = {
       },
       categoryID: {
         allowNull: false,
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
         references: {
           model: "categories",
           key: "categoryID",
@@ -46,6 +44,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Products');
-  }
-};
+    await queryInterface.dropTable("Products")
+  },
+}
