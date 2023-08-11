@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   Category.init(
     {
       categoryID: {
-        allowNull: false,
         primaryKey: true,
+        allowNull: false,
         type: DataTypes.UUID,
       },
       name: {
