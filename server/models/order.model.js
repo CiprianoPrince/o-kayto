@@ -1,7 +1,7 @@
 "use strict"
 const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Order extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,50 +9,49 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.Cart, { foreignKey: "userID" })
-      this.hasMany(models.Order, { foreignKey: "userID" })
-      this.hasMany(models.Wishlist, { foreignKey: "userID" })
+      this.belongsTo(models.User, { foreignKey: "userID" })
+      this.hasMany(models.OrderDetail, { foreignKey: "orderID" })
     }
   }
-  User.init(
+  Order.init(
     {
-      userID: {
+      orderID: {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      firstName: {
+      userID: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
+        references: {
+          model: "users",
+          key: "userID",
+        },
       },
-      lastName: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      email: {
-        unique: true,
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      address: {
-        allowNull: true,
-        type: DataTypes.STRING,
-      },
-      phone: {
-        allowNull: true,
-        type: DataTypes.BIGINT,
-      },
-      dateRegistered: {
+      dateOrdered: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
+      shippingAddress: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      totalPrice: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      status: {
+        allowNull: false,
+        type: DataTypes.ENUM,
+        values: ["Processing", "Shipped", "Delivered"],
+      },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: "Order",
     }
   )
-  return User
+  return Order
 }
