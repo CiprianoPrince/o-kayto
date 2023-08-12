@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Products",
+          model: "products",
           key: "productID",
         },
       },
@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Variants",
+          model: "variants",
           key: "variantID",
         },
       },

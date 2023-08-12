@@ -13,17 +13,19 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Products",
+          model: "products",
           key: "productID",
         },
       },
       size: {
         allowNull: false,
         type: Sequelize.ENUM,
+        values: ["S", "M", "L", "XL"],
       },
       color: {
         allowNull: false,
         type: Sequelize.ENUM,
+        values: ["Maroon", "Navy"],
       },
       createdAt: {
         allowNull: false,

@@ -13,13 +13,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Users",
+          model: "users",
           key: "userID",
         },
       },
       type: {
         allowNull: false,
         type: Sequelize.ENUM,
+        values: ["Credit Card", "PayPal", "Bank Transfer"],
       },
       cardNumber: {
         allowNull: false,

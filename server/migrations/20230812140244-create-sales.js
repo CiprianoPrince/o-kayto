@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Orders",
+          model: "orders",
           key: "orderID",
         },
       },
@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "Payments",
+          model: "payments",
           key: "paymentID",
         },
       },
@@ -29,7 +29,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: "userID",
+          model: "users",
           key: "userID",
         },
       },
@@ -44,6 +44,7 @@ module.exports = {
       status: {
         allowNull: false,
         type: Sequelize.ENUM,
+        values: ["Complete", "Partial", "Refunded"],
       },
       createdAt: {
         allowNull: false,
