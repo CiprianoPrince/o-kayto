@@ -1,116 +1,63 @@
 const db = require("../models")
 const UserModel = db.User
-const CartModel = db.Cart
-const CartDetailModel = db.CartDetail
 
-exports.create = (request, response) => {
-  const hasAllValue = Object.values(request.body).every(Boolean)
-
-  if (!hasAllValue) {
-    response.status(400).send({
-      message: `User data cannot be empty.`,
+exports.findAll = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    response.status(200).send({
+      message: `Retrieved users${
+        users.length <= 1 ? "" : "s"
+      } data successfully`,
+      success: true,
+      data: users,
+    })
+  } catch (error) {
+    response.status(500).send({
+      message: `Retreiving of users data failed. Error: ${error},`,
       success: false,
       errorCode: "ERR9001",
     })
-    return response.send(request.body)
   }
-
-  User.create(request.body)
-    .then((data) => {
-      response.status(201).send({
-        message: `New User created successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Saving of user data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
-}
-
-exports.findAll = (request, response) => {
-  User.findAll({ where: "" })
-    .then((data) => {
-      response.status(200).send({
-        message: `Tutorial${
-          data.length > 1 ? "s" : ""
-        } has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Retreiving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
-}
-
-exports.findUserCart = (request, response) => {
-  const userID = request.params.userID
-  User.findAll({
-    where: { userID },
-    include: [
-      {
-        model: Cart,
-        required: false,
-        include: [CartDetail],
-      },
-    ],
-  })
-    .then((data) => {
-      response.status(200).send({
-        message: `Tutorial${
-          data.length > 1 ? "s" : ""
-        } has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Retreiving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
 }
 
 exports.findByPk = async (request, response) => {
   const userID = request.params.userID
 
-  const user = await UserModel.findByPk(userID)
-  const carts = await user.getCarts()
-  response.send(carts.map((cart) => cart.getCartDetail()))
-  // .then((data) => {
-  //   if (!data) {
-  //     return response.status(400).send({
-  //       message: `Tutorial data does not exist. userID: ${userID} `,
-  //       success: false,
-  //     })
-  //   }
-  //   return response.status(200).send({
-  //     message: `Tutorial has been retrieved successfully`,
-  //     success: true,
-  //     data,
-  //   })
-  // })
-  // .catch((error) => {
-  //   return response.status(500).send({
-  //     message: `Retreiving of User data failed. ${error},`,
-  //     success: false,
-  //     errorCode: "ERR9001",
-  //   })
-  // })
+  try {
+    const dbUserData = await UserModel.findByPk(userID)
+    response.status(200).send({
+      message: `Retrieved user data successfully`,
+      success: true,
+      data: dbUserData,
+    })
+  } catch (error) {
+    response.status(500).send({
+      message: `Retreiving of user data failed. Error: ${error},`,
+      success: false,
+      errorCode: "ERR9001",
+    })
+  }
 }
 
-exports.update = (request, response) => {
+exports.createOne = async (request, response) => {
+  try {
+    const rawUserData = request.body
+    const dbUserData = await UserModel.create(rawUserData)
+    response.status(200).send({
+      message: `Registered user successfully`,
+      success: true,
+      data: dbUserData,
+    })
+  } catch (error) {
+    response.status(500).send({
+      message: `Failed to register user. Error: ${error},`,
+      success: false,
+      errorCode: "ERR9001",
+    })
+  }
+}
+
+exports.updateOne = (request, response) => {
   const hasBothValue = request.body.title && request.body.description
   if (!hasBothValue) {
     response.status(400).send({

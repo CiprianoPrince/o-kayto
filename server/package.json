@@ -10,6 +10,8 @@
     "serve": "nodemon server.js",
     "migrateUp": "npx sequelize-cli db:migrate",
     "migrateDown": "npx sequelize-cli db:migrate:undo:all",
+    "seedUp": "npx sequelize-cli db:seed:all",
+    "seedDown": "npx sequelize-cli db:seed:undo:all",
     "dbReset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:seed:all"
   },
   "dependencies": {

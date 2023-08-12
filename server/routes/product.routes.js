@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const controller = require("../controllers/user.controller")
+  const controller = require("../controllers/product.controller")
 
   const router = require("express").Router()
 
@@ -13,5 +13,5 @@ module.exports = (app) => {
 
   router.delete("/:userID", controller.deleteOne)
 
-  app.use("/api/users", router)
+  app.use("/api/products", router)
 }
