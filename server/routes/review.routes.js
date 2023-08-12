@@ -1,46 +1,23 @@
 module.exports = (app) => {
-  const controller = require("../controllers/user.controller")
-  const validator = require("../validators/user.validator")
+  const controller = require("../controllers/review.controller")
+  const validator = require("../validators/review.validator")
 
   const router = require("express").Router()
 
-  // GET /reviews - Retrieve all reviews.
-  // GET /reviews/{reviewId} - Retrieve a specific review.
-  // POST /reviews - Add a new review.
-  // PUT /reviews/{reviewId} - Update a review.
-  // DELETE /reviews/{reviewId} - Delete a review.
-
+  // Retrieve all reviews.
   router.get("/", controller.findAll)
 
-  router.get("/:userID", controller.findByPk)
+  // Retrieve a specific review.
+  router.get("/:reviewID", controller.findByPk)
 
-  router.post(
-    "/",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.createOne
-  )
+  // Add a new review.
+  router.post("/", controller.createOne)
 
-  router.put(
-    "/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.updateOne
-  )
+  // Update a review.
+  router.put("/:reviewID", controller.updateOne)
 
-  router.put(
-    "complete/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    validator.validateAddress,
-    validator.validatePhone,
-    controller.updateOne
-  )
+  // Delete a review.
+  router.delete("/:reviewID", controller.deleteOne)
 
-  router.delete("/:userID", controller.deleteOne)
-
-  app.use("/api/users", router)
+  app.use("/api/reviews", router)
 }

@@ -13,7 +13,7 @@ const getModelName = require("../helpers/getModelName")
 
 const modelName = getModelName(__filename)
 
-exports.findAllUser = async (request, response) => {
+exports.findAll = async (request, response) => {
   try {
     const users = await UserModel.findAll()
     if (!users.length) {
@@ -46,7 +46,7 @@ exports.findAllUser = async (request, response) => {
   }
 }
 
-exports.findUserByPk = async (request, response) => {
+exports.findByPk = async (request, response) => {
   try {
     const userID = request.params.userID
     const dbUserData = await UserModel.findByPk(userID)
@@ -78,7 +78,7 @@ exports.findUserByPk = async (request, response) => {
   }
 }
 
-exports.createUser = async (request, response) => {
+exports.create = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -115,7 +115,7 @@ exports.createUser = async (request, response) => {
   }
 }
 
-exports.updateUser = async (request, response) => {
+exports.update = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -167,7 +167,7 @@ exports.updateUser = async (request, response) => {
   }
 }
 
-exports.updateUserComplete = async (request, response) => {
+exports.updateComplete = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -219,7 +219,7 @@ exports.updateUserComplete = async (request, response) => {
   }
 }
 
-exports.deleteUser = async (request, response) => {
+exports.delete = async (request, response) => {
   try {
     const userID = request.params.userID
 
@@ -228,12 +228,17 @@ exports.deleteUser = async (request, response) => {
       return sendResponse(
         response,
         StatusCodes.BAD_REQUEST,
-        `User does not exist. userID: ${userID}`
+        generateMessage.deleteOne.missingID(modelName)
       )
     }
-    sendResponse(response, StatusCodes.OK, `Deleted user data successfully.`, {
-      deletedRows,
-    })
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.deleteOne.success(modelName),
+      {
+        deletedRows,
+      }
+    )
   } catch (error) {
     if (error instanceof ValidationError) {
       // handle validation error
@@ -241,7 +246,7 @@ exports.deleteUser = async (request, response) => {
     sendResponse(
       response,
       StatusCodes.INTERNAL_SERVER_ERROR,
-      `Failed to delete user.`,
+      generateMessage.deleteOne.failure(modelName),
       null,
       error,
       "ERR9001"

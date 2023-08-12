@@ -1,46 +1,23 @@
 module.exports = (app) => {
-  const controller = require("../controllers/user.controller")
-  const validator = require("../validators/user.validator")
+  const controller = require("../controllers/product.controller")
+  const validator = require("../validators/product.validator")
 
   const router = require("express").Router()
 
-  // GET /products - Retrieve all products.
-  // GET /products/{productId} - Retrieve details of a specific product.
-  // POST /products - Add a new product.
-  // PUT /products/{productId} - Update a product's details.
-  // DELETE /products/{productId} - Delete a product.
-
+  // Retrieve all products.
   router.get("/", controller.findAll)
 
-  router.get("/:userID", controller.findByPk)
+  //  Retrieve details of a specific product.
+  router.get("/:productID", controller.findByPk)
 
-  router.post(
-    "/",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.createOne
-  )
+  // Add a new product.
+  router.post("/", controller.createOne)
 
-  router.put(
-    "/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.updateOne
-  )
+  //  Update a product's details.
+  router.put("/:productID", controller.updateOne)
 
-  router.put(
-    "complete/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    validator.validateAddress,
-    validator.validatePhone,
-    controller.updateOne
-  )
+  //  Delete a product.
+  router.delete("/:productID", controller.deleteOne)
 
-  router.delete("/:userID", controller.deleteOne)
-
-  app.use("/api/users", router)
+  app.use("/api/products", router)
 }

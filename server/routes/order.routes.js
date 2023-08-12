@@ -1,47 +1,23 @@
 module.exports = (app) => {
-  const controller = require("../controllers/user.controller")
-  const validator = require("../validators/user.validator")
+  const controller = require("../controllers/order.controller")
+  const validator = require("../validators/order.validator")
 
   const router = require("express").Router()
 
-
-// GET /orders - Retrieve all orders.
-// GET /orders/{orderId} - Retrieve a specific order.
-// POST /orders - Place a new order.
-// PUT /orders/{orderId} - Update order details/status.
-// DELETE /orders/{orderId} - Cancel an order.
-
+  // Retrieve all orders.
   router.get("/", controller.findAll)
 
-  router.get("/:userID", controller.findByPk)
+  //  Retrieve a specific order.
+  router.get("/:orderID", controller.findByPk)
 
-  router.post(
-    "/",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.createOne
-  )
+  // Place a new order.
+  router.post("/", controller.createOne)
 
-  router.put(
-    "/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    controller.updateOne
-  )
+  // Update order details/status.
+  router.put("/:orderID", controller.updateOne)
 
-  router.put(
-    "complete/:userID",
-    validator.validateFirstName,
-    validator.validatelastName,
-    validator.validateEmail,
-    validator.validateAddress,
-    validator.validatePhone,
-    controller.updateOne
-  )
-
-  router.delete("/:userID", controller.deleteOne)
+  // Cancel an order.
+  router.delete("/:orderID", controller.deleteOne)
 
   // POST /orders/{orderId}/payments - Make a payment for an order.
   app.use("/api/orders", router)
