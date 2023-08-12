@@ -1,138 +1,382 @@
 const db = require("../models")
 const UserModel = db.User
 
+const { ValidationError } = require("sequelize")
+
 const { validationResult } = require("express-validator")
 
-exports.findAll = async (request, response) => {
+const { StatusCodes } = require("http-status-codes")
+
+const sendResponse = require("../helpers/sendResponse")
+const generateMessage = require("../helpers/generateMessage")
+const getModelName = require("../helpers/getModelName")
+
+const modelName = getModelName(__filename)
+
+exports.findAllUser = async (request, response) => {
   try {
     const users = await UserModel.findAll()
-    return response.status(200).send({
-      message: `Retrieved users${
-        users.length <= 1 ? "" : "s"
-      } data successfully`,
-      success: true,
-      data: users,
-    })
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
   } catch (error) {
-    return response.status(500).send({
-      message: `Retreiving of users data failed. Error: ${error},`,
-      success: false,
-      errorCode: "ERR9001",
-    })
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
 }
 
-exports.findByPk = async (request, response) => {
-  const userID = request.params.userID
-
+exports.findUserByPk = async (request, response) => {
   try {
+    const userID = request.params.userID
     const dbUserData = await UserModel.findByPk(userID)
-    return response.status(200).send({
-      message: `Retrieved user data successfully`,
-      success: true,
-      data: dbUserData,
-    })
+    if (!dbUserData) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.findByPk.missingID(modelName, userID)
+      )
+    }
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findByPk.success(modelName),
+      dbUserData
+    )
   } catch (error) {
-    return response.status(500).send({
-      message: `Retreiving of user data failed. Error: ${error},`,
-      success: false,
-      errorCode: "ERR9001",
-    })
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findByPk.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
 }
 
-exports.createOne = async (request, response) => {
+exports.createUser = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
-    return response.status(400).send({
-      message: `Fields should not be empty/Incorrect format.`,
-      success: false,
-      errors: errors.array(),
-    })
+    return sendResponse(
+      response,
+      StatusCodes.BAD_REQUEST,
+      generateMessage.all.emptyData(),
+      null,
+      errors.array()
+    )
   }
 
   try {
     const rawUserData = request.body
     const dbUserData = await UserModel.create(rawUserData)
-    return response.status(200).send({
-      message: `Registered user successfully.`,
-      success: true,
-      data: dbUserData,
-    })
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.createOne.success(modelName),
+      dbUserData
+    )
   } catch (error) {
-    return response.status(500).send({
-      message: `Failed to register user. Error: ${error},`,
-      success: false,
-      errorCode: "ERR9001",
-    })
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.createOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
 }
 
-exports.updateOne = async (request, response) => {
+exports.updateUser = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
-    return response.status(400).send({
-      message: `Fields should not be empty/Incorrect format.`,
-      success: false,
-      errors: errors.array(),
-    })
+    return sendResponse(
+      response,
+      StatusCodes.BAD_REQUEST,
+      generateMessage.all.emptyData(),
+      null,
+      errors.array()
+    )
   }
 
   try {
     const userID = request.params.userID
-    const rawUserData = await request.body
+    const rawUserData = request.body
 
-    const [isUpdated] = await UserModel.update(rawUserData, {
+    const [affectedRows] = await UserModel.update(rawUserData, {
       where: { userID },
     })
 
-    if (!isUpdated) {
-      return response.status(400).send({
-        message: `User does not exist. userID: ${userID}`,
-        success: false,
-        affectedRow: isUpdated,
-      })
+    if (!affectedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.updateOne.missingID(modelName)
+      )
     }
 
-    return response.status(200).send({
-      message: `User details updated successfully`,
-      success: true,
-      affectedRow: isUpdated,
-    })
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.updateOne.success(modelName),
+      {
+        affectedRows,
+      }
+    )
   } catch (error) {
-    response.status(500).send({
-      message: `Failed to register user.. Error: ${error},`,
-      success: false,
-      errorCode: "ERR9001",
-    })
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.updateOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
 }
 
-exports.deleteOne = async (request, response) => {
+exports.updateUserComplete = async (request, response) => {
+  const errors = validationResult(request)
+
+  if (!errors.isEmpty()) {
+    return sendResponse(
+      response,
+      StatusCodes.BAD_REQUEST,
+      generateMessage.all.emptyData(),
+      null,
+      errors.array()
+    )
+  }
+
+  try {
+    const userID = request.params.userID
+    const rawUserData = request.body
+
+    const [affectedRows] = await UserModel.update(rawUserData, {
+      where: { userID },
+    })
+
+    if (!affectedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.updateOne.missingID(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.updateOne.success(modelName),
+      {
+        affectedRows,
+      }
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.updateOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.deleteUser = async (request, response) => {
   try {
     const userID = request.params.userID
 
-    const isDeleted = await UserModel.destroy({ where: { userID } })
-    console.log(isDeleted)
-    if (!isDeleted) {
-      return response.status(400).send({
-        message: `User does not exist. id: ${id} `,
-        success: false,
-        deletedRow: isDeleted,
-      })
+    const deletedRows = await UserModel.destroy({ where: { userID } })
+    if (!deletedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        `User does not exist. userID: ${userID}`
+      )
     }
-    response.status(200).send({
-      message: `User deleted successfully`,
-      success: true,
-      deletedRow: deletedRow,
+    sendResponse(response, StatusCodes.OK, `Deleted user data successfully.`, {
+      deletedRows,
     })
   } catch (error) {
-    response.status(500).send({
-      message: `Failed to delete user. Error: ${error},`,
-      success: false,
-      errorCode: "ERR9001",
-    })
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      `Failed to delete user.`,
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.findCart = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.createCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.updateCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.deleteCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
 }

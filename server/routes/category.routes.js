@@ -4,11 +4,11 @@ module.exports = (app) => {
 
   const router = require("express").Router()
 
-  // GET /products - Retrieve all products.
-  // GET /products/{productId} - Retrieve details of a specific product.
-  // POST /products - Add a new product.
-  // PUT /products/{productId} - Update a product's details.
-  // DELETE /products/{productId} - Delete a product.
+  // GET /categories - Retrieve all categories.
+  // GET /categories/{categoryId} - Retrieve details of a specific category.
+  // POST /categories - Add a new category.
+  // PUT /categories/{categoryId} - Update category details.
+  // DELETE /categories/{categoryId} - Delete a category.
 
   router.get("/", controller.findAll)
 

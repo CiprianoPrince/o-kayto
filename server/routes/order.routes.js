@@ -4,11 +4,12 @@ module.exports = (app) => {
 
   const router = require("express").Router()
 
-  // GET /products - Retrieve all products.
-  // GET /products/{productId} - Retrieve details of a specific product.
-  // POST /products - Add a new product.
-  // PUT /products/{productId} - Update a product's details.
-  // DELETE /products/{productId} - Delete a product.
+
+// GET /orders - Retrieve all orders.
+// GET /orders/{orderId} - Retrieve a specific order.
+// POST /orders - Place a new order.
+// PUT /orders/{orderId} - Update order details/status.
+// DELETE /orders/{orderId} - Cancel an order.
 
   router.get("/", controller.findAll)
 
@@ -42,5 +43,6 @@ module.exports = (app) => {
 
   router.delete("/:userID", controller.deleteOne)
 
-  app.use("/api/users", router)
+  // POST /orders/{orderId}/payments - Make a payment for an order.
+  app.use("/api/orders", router)
 }

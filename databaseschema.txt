@@ -11,6 +11,7 @@ LastName
 Address
 Phone
 DateRegistered
+
 Products Table:
 
 ProductID (Primary Key)
