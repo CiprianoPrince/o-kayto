@@ -1,0 +1,154 @@
+
+Users Table:
+UserID (Primary Key)
+Username
+Password (hashed & salted)
+Email
+FirstName
+LastName
+Address
+Phone
+DateRegistered
+
+Products Table:
+ProductID (Primary Key)
+Name
+Description
+Price
+QuantityInStock
+CategoryID (Foreign Key)
+BrandID (Foreign Key)
+
+Category Table:
+CategoryID (Primary Key)
+Name
+Description
+
+Brands Table:
+BrandID (Primary Key)
+BrandName
+
+Order Table:
+OrderID (Primary Key)
+UserID (Foreign Key)
+DateOrdered
+ShippingAddress
+TotalPrice
+Status (e.g., "Processing", "Shipped", "Delivered")
+
+OrderDetails Table:
+OrderDetailID (Primary Key)
+OrderID (Foreign Key)
+ProductID (Foreign Key)
+Quantity
+Price
+
+Review Table:
+ReviewID (Primary Key)
+UserID (Foreign Key)
+ProductID (Foreign Key)
+Rating (e.g., from 1 to 5)
+Comment
+DatePosted
+
+Wishlist Table:
+WishlistID (Primary Key)
+UserID (Foreign Key)
+
+WishlistDetails Table:
+WishlistDetailID (Primary Key)
+WishlistID (Foreign Key)
+ProductID (Foreign Key)
+
+Cart Table:
+CartID (Primary Key)
+UserID (Foreign Key)
+
+CartDetails Table:
+CartDetailID (Primary Key)
+CartID (Foreign Key)
+ProductID (Foreign Key)
+Quantity
+
+Images Table:
+ImageID (Primary Key)
+ProductID (Foreign Key)
+ImagePath
+AltText
+
+Sizes Table (if you're considering various sizes):
+SizeID (Primary Key)
+SizeName (e.g., "S", "M", "L", "XL")
+
+ProductSizes Table (to map which sizes are available for each product):
+ProductSizeID (Primary Key)
+ProductID (Foreign Key)
+SizeID (Foreign Key)
+QuantityInStock
+
+PaymentMethods Table:
+PaymentMethodID (Primary Key)
+UserID (Foreign Key)
+Type (e.g., "Credit Card", "PayPal", "Bank Transfer")
+CardNumber (hashed & partially shown for security, e.g., "**** **** **** 1234")
+ExpiryDate (if applicable)
+CardholderName (if applicable)
+BankName (for bank transfers or if applicable)
+DateAdded
+IsActive (to track if a payment method is active or has been deactivated)
+
+Payments Table:
+PaymentID (Primary Key)
+OrderID (Foreign Key linking to the order for which the payment was made)
+PaymentMethodID (Foreign Key linking to the method used for the payment)
+Amount
+PaymentDate
+PaymentStatus (e.g., "Pending", "Completed", "Failed", "Refunded")
+
+Refunds Table (optional but recommended):
+RefundID (Primary Key)
+PaymentID (Foreign Key linking to the original payment)
+Amount
+RefundDate
+Reason (optional description of why the refund occurred)
+Status (e.g., "Pending", "Completed")
+
+Sales Table:
+SaleID (Primary Key)
+OrderID (Foreign Key linking to the related order)
+PaymentID (Foreign Key linking to the payment table; allows for multi-payment scenarios)
+UserID (Foreign Key indicating the user who made the purchase)
+TotalAmount (total sale amount, which might differ from order amount due to discounts, returns, etc.)
+SaleDate
+Status (e.g., "Complete", "Partial", "Refunded")
+SalespersonID (if you have physical locations or sales agents making sales)
+
+SalesDetails Table:
+SaleDetailID (Primary Key)
+SaleID (Foreign Key linking to the Sales table)
+ProductID (Foreign Key linking to the Products table)
+Quantity
+PricePerUnit
+Discount (if any)
+TotalPrice
+
+Inventory Table:
+InventoryID (Primary Key)
+ProductID (Foreign Key linking to the Products table)
+WarehouseID (Foreign Key, if you're using multiple warehouses or storage locations)
+VariantID (Foreign Key, if you're tracking product variants like size or color)
+QuantityInStock
+ReorderThreshold (the level at which new stock should be ordered)
+LastRestockDate
+
+Warehouse Table (optional, if using multiple warehouses):
+WarehouseID (Primary Key)
+WarehouseName
+WarehouseLocation
+WarehouseContactDetails
+
+ProductVariants Table (optional, for products with different sizes, colors, etc.):
+VariantID (Primary Key)
+ProductID (Foreign Key)
+Size (e.g., "S", "M", "L", "XL")
+Color

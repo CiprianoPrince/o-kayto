@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.OrderDetail, { foreignKey: "productID" })
       this.hasMany(models.WishlistDetail, { foreignKey: "productID" })
       this.hasMany(models.ProductSize, { foreignKey: "productID" })
+      this.hasMany(models.SaleDetail, { foreignKey: "saleID" })
+      this.hasMany(models.Variant, { foreignKey: "productID" })
+      this.hasMany(models.Inventory, { foreignKey: "productID" })
       this.hasOne(models.Image, { foreignKey: "productID" })
     }
   }
