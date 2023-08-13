@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "admin",
-    "password": "dog",
+    "password": "Melvintot@16",
     "database": "node-starter",
     "host": "localhost",
     "dialect": "mysql"
