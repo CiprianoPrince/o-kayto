@@ -1,7 +1,7 @@
-import React from "react"
+import { Main } from "../../components/layout/Frontend/index copy"
 
 const Home = () => {
-  return <h1>Home</h1>
+  return <Main>Home</Main>
 }
 
 export default Home
