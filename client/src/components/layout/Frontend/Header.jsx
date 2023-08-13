@@ -2,7 +2,7 @@ import { Container, Nav, Navbar, NavbarBrand } from "react-bootstrap"
 import { PersonCircle } from "react-bootstrap-icons"
 import { Link, NavLink } from "react-router-dom"
 
-const navLinkCssClass = "text-primary text-decoration-none fw-semibold fs-3"
+const navLinkCssClass = "text-white text-decoration-none fw-semibold fs-5"
 const navCssClass = "ms-auto"
 
 const Header = () => {
