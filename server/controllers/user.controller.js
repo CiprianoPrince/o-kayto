@@ -1,206 +1,387 @@
 const db = require("../models")
 const UserModel = db.User
-const CartModel = db.Cart
-const CartDetailModel = db.CartDetail
 
-exports.create = (request, response) => {
-  const hasAllValue = Object.values(request.body).every(Boolean)
+const { ValidationError } = require("sequelize")
 
-  if (!hasAllValue) {
-    response.status(400).send({
-      message: `User data cannot be empty.`,
-      success: false,
-      errorCode: "ERR9001",
-    })
-    return response.send(request.body)
+const { validationResult } = require("express-validator")
+
+const { StatusCodes } = require("http-status-codes")
+
+const sendResponse = require("../helpers/sendResponse")
+const generateMessage = require("../helpers/generateMessage")
+const getModelName = require("../helpers/getModelName")
+
+const modelName = getModelName(__filename)
+
+exports.findAll = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
-
-  User.create(request.body)
-    .then((data) => {
-      response.status(201).send({
-        message: `New User created successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Saving of user data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
-}
-
-exports.findAll = (request, response) => {
-  User.findAll({ where: "" })
-    .then((data) => {
-      response.status(200).send({
-        message: `Tutorial${
-          data.length > 1 ? "s" : ""
-        } has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Retreiving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
-}
-
-exports.findUserCart = (request, response) => {
-  const userID = request.params.userID
-  User.findAll({
-    where: { userID },
-    include: [
-      {
-        model: Cart,
-        required: false,
-        include: [CartDetail],
-      },
-    ],
-  })
-    .then((data) => {
-      response.status(200).send({
-        message: `Tutorial${
-          data.length > 1 ? "s" : ""
-        } has been retrieved successfully`,
-        success: true,
-        data,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Retreiving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
 }
 
 exports.findByPk = async (request, response) => {
-  const userID = request.params.userID
-
-  const user = await UserModel.findByPk(userID)
-  const carts = await user.getCarts()
-  response.send(carts.map((cart) => cart.getCartDetail()))
-  // .then((data) => {
-  //   if (!data) {
-  //     return response.status(400).send({
-  //       message: `Tutorial data does not exist. userID: ${userID} `,
-  //       success: false,
-  //     })
-  //   }
-  //   return response.status(200).send({
-  //     message: `Tutorial has been retrieved successfully`,
-  //     success: true,
-  //     data,
-  //   })
-  // })
-  // .catch((error) => {
-  //   return response.status(500).send({
-  //     message: `Retreiving of User data failed. ${error},`,
-  //     success: false,
-  //     errorCode: "ERR9001",
-  //   })
-  // })
-}
-
-exports.update = (request, response) => {
-  const hasBothValue = request.body.title && request.body.description
-  if (!hasBothValue) {
-    response.status(400).send({
-      message: `Title or Description cannot be empty.`,
-      success: false,
-      errorCode: "ERR9001",
-    })
-    return
+  try {
+    const userID = request.params.userID
+    const dbUserData = await UserModel.findByPk(userID)
+    if (!dbUserData) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.findByPk.missingID(modelName, userID)
+      )
+    }
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findByPk.success(modelName),
+      dbUserData
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findByPk.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
   }
-  const id = request.params.id
-  const { title, description, published } = request.body
-  const newUserData = { title, description, published }
-
-  User.update(newUserData, { where: { id: id } })
-    .then((data) => {
-      const affectedNumRow = data[0]
-      if (!affectedNumRow) {
-        response.status(400).send({
-          message: `Tutorial data does not exist. id: ${id} `,
-          success: false,
-          affectedRow: affectedNumRow,
-        })
-        return
-      }
-      response.status(200).send({
-        message: `Tutorial updated successfully`,
-        success: true,
-        affectedRow: affectedNumRow,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Saving of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
 }
 
-exports.deleteAll = (request, response) => {
-  User.destroy({ where: {} })
-    .then(async (data) => {
-      const deletedRow = await data
-      if (!deletedRow) {
-        response.status(400).send({
-          message: `Tutorial does not have data`,
-          success: false,
-          deletedRow: deletedRow,
-        })
-        return
-      }
-      response.status(200).send({
-        message: `Tutorial deleted successfully`,
-        success: true,
-        deletedRow: deletedRow,
-      })
-    })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Deleting of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
+exports.createOne = async (request, response) => {
+  try {
+    const errors = validationResult(request)
+
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
+
+    const rawUserData = request.body
+    const dbUserData = await UserModel.create(rawUserData)
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.createOne.success(modelName),
+      dbUserData
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.createOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
 }
 
-exports.deleteOne = (request, response) => {
-  const id = request.params.id
-  User.destroy({ where: { id: id } })
-    .then(async (data) => {
-      const deletedRow = await data
-      if (!deletedRow) {
-        response.status(400).send({
-          message: `Tutorial data does not exist. id: ${id} `,
-          success: false,
-          deletedRow: deletedRow,
-        })
-        return
+exports.updateOne = async (request, response) => {
+  try {
+    const errors = validationResult(request)
+
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
+
+    const userID = request.params.userID
+    const rawUserData = request.body
+
+    const [affectedRows] = await UserModel.update(rawUserData, {
+      where: { userID },
+    })
+
+    if (!affectedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.updateOne.missingID(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.updateOne.success(modelName),
+      {
+        affectedRows,
       }
-      response.status(200).send({
-        message: `Tutorial deleted successfully`,
-        success: true,
-        deletedRow: deletedRow,
-      })
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.updateOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.updateComplete = async (request, response) => {
+  try {
+    const errors = validationResult(request)
+
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
+
+    const userID = request.params.userID
+    const rawUserData = request.body
+
+    const [affectedRows] = await UserModel.update(rawUserData, {
+      where: { userID },
     })
-    .catch((error) => {
-      response.status(500).send({
-        message: `Deleting of Tutorial data failed. Error: ${error},`,
-        success: false,
-        errorCode: "ERR9001",
-      })
-    })
+
+    if (!affectedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.updateOne.missingID(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.updateOne.success(modelName),
+      {
+        affectedRows,
+      }
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.updateOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.deleteOne = async (request, response) => {
+  try {
+    const userID = request.params.userID
+
+    const deletedRows = await UserModel.destroy({ where: { userID } })
+    if (!deletedRows) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.deleteOne.missingID(modelName)
+      )
+    }
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.deleteOne.success(modelName),
+      {
+        deletedRows,
+      }
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.deleteOne.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.findCart = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.createCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.updateCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
+}
+
+exports.deleteCartItem = async (request, response) => {
+  try {
+    const users = await UserModel.findAll()
+    if (!users.length) {
+      return sendResponse(
+        response,
+        StatusCodes.NO_CONTENT,
+        generateMessage.findAll.missing(modelName)
+      )
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.OK,
+      generateMessage.findAll.success(modelName, users.length),
+      users
+    )
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      // handle validation error
+    }
+
+    sendResponse(
+      response,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      generateMessage.findAll.failure(modelName),
+      null,
+      error,
+      "ERR9001"
+    )
+  }
 }
