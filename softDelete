@@ -1,0 +1,14 @@
+Sequelize Soft Deletes:
+javascript
+Copy code
+const { Model, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
+
+class User extends Model {}
+User.init({
+  username: DataTypes.STRING,
+  isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
+}, { 
+    sequelize,
+    paranoid: true 
+});
