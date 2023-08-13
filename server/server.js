@@ -54,7 +54,7 @@ app.use(express.urlencoded({ extended: true }))
 const db = require("./models")
 db.sequelize.sync().then().catch()
 
-require("./routes/user.routes")(app)
+// require("./routes/user.routes")(app)
 
 const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
