@@ -79,19 +79,19 @@ exports.findByPk = async (request, response) => {
 }
 
 exports.create = async (request, response) => {
-  const errors = validationResult(request)
-
-  if (!errors.isEmpty()) {
-    return sendResponse(
-      response,
-      StatusCodes.BAD_REQUEST,
-      generateMessage.all.emptyData(),
-      null,
-      errors.array()
-    )
-  }
-
   try {
+    const errors = validationResult(request)
+
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
+
     const rawUserData = request.body
     const dbUserData = await UserModel.create(rawUserData)
     sendResponse(
@@ -116,6 +116,7 @@ exports.create = async (request, response) => {
 }
 
 exports.update = async (request, response) => {
+  try {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -128,7 +129,6 @@ exports.update = async (request, response) => {
     )
   }
 
-  try {
     const userID = request.params.userID
     const rawUserData = request.body
 
@@ -168,6 +168,7 @@ exports.update = async (request, response) => {
 }
 
 exports.updateComplete = async (request, response) => {
+  try {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -180,7 +181,6 @@ exports.updateComplete = async (request, response) => {
     )
   }
 
-  try {
     const userID = request.params.userID
     const rawUserData = request.body
 
