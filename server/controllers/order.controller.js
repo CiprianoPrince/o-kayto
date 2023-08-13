@@ -78,7 +78,7 @@ exports.findByPk = async (request, response) => {
   }
 }
 
-exports.create = async (request, response) => {
+exports.createOne = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -115,7 +115,7 @@ exports.create = async (request, response) => {
   }
 }
 
-exports.update = async (request, response) => {
+exports.updateOne = async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -167,7 +167,7 @@ exports.update = async (request, response) => {
   }
 }
 
-exports.delete = async (request, response) => {
+exports.deleteOne = async (request, response) => {
   try {
     const orderID = request.params.orderID
 

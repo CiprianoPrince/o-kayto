@@ -1,7 +1,7 @@
 "use strict"
 const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
-  class Order extends Model {
+  class Sales extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,19 +9,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Order, { foreignKey: "orderID" })
+      this.belongsTo(models.Payment, { foreignKey: "paymentID" })
       this.belongsTo(models.User, { foreignKey: "userID" })
-      this.hasMany(models.OrderDetail, { foreignKey: "orderID" })
-      this.hasMany(models.Payment, { foreignKey: "orderID" })
-      this.hasOne(models.Sales, { foreignKey: "orderID" })
+      this.hasOne(models.SaleDetail, { foreignKey: "saleID" })
     }
   }
-  Order.init(
+  Sales.init(
     {
-      orderID: {
+      saleID: {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+      },
+      orderID: {
+        allowNull: false,
+        type: DataTypes.UUID,
+        references: {
+          model: "orders",
+          key: "orderID",
+        },
+      },
+      paymentID: {
+        allowNull: false,
+        type: DataTypes.UUID,
+        references: {
+          model: "payments",
+          key: "paymentID",
+        },
       },
       userID: {
         allowNull: false,
@@ -31,29 +47,24 @@ module.exports = (sequelize, DataTypes) => {
           key: "userID",
         },
       },
-      dateOrdered: {
-        allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      shippingAddress: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      totalPrice: {
+      totalAmount: {
         allowNull: false,
         type: DataTypes.INTEGER,
+      },
+      saleDate: {
+        allowNull: false,
+        type: DataTypes.DATE,
       },
       status: {
         allowNull: false,
         type: DataTypes.ENUM,
-        values: ["Processing", "Shipped", "Delivered"],
+        values: ["Complete", "Partial", "Refunded"],
       },
     },
     {
       sequelize,
-      modelName: "Order",
+      modelName: "Sales",
     }
   )
-  return Order
+  return Sales
 }

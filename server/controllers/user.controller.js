@@ -78,7 +78,7 @@ exports.findByPk = async (request, response) => {
   }
 }
 
-exports.create = async (request, response) => {
+exports.createOne = async (request, response) => {
   try {
     const errors = validationResult(request)
 
@@ -115,19 +115,19 @@ exports.create = async (request, response) => {
   }
 }
 
-exports.update = async (request, response) => {
+exports.updateOne = async (request, response) => {
   try {
-  const errors = validationResult(request)
+    const errors = validationResult(request)
 
-  if (!errors.isEmpty()) {
-    return sendResponse(
-      response,
-      StatusCodes.BAD_REQUEST,
-      generateMessage.all.emptyData(),
-      null,
-      errors.array()
-    )
-  }
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
 
     const userID = request.params.userID
     const rawUserData = request.body
@@ -169,17 +169,17 @@ exports.update = async (request, response) => {
 
 exports.updateComplete = async (request, response) => {
   try {
-  const errors = validationResult(request)
+    const errors = validationResult(request)
 
-  if (!errors.isEmpty()) {
-    return sendResponse(
-      response,
-      StatusCodes.BAD_REQUEST,
-      generateMessage.all.emptyData(),
-      null,
-      errors.array()
-    )
-  }
+    if (!errors.isEmpty()) {
+      return sendResponse(
+        response,
+        StatusCodes.BAD_REQUEST,
+        generateMessage.all.emptyData(),
+        null,
+        errors.array()
+      )
+    }
 
     const userID = request.params.userID
     const rawUserData = request.body
@@ -219,7 +219,7 @@ exports.updateComplete = async (request, response) => {
   }
 }
 
-exports.delete = async (request, response) => {
+exports.deleteOne = async (request, response) => {
   try {
     const userID = request.params.userID
 

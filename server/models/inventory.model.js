@@ -1,7 +1,7 @@
 "use strict"
 const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
-  class Order extends Model {
+  class Inventory extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,51 +9,51 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.User, { foreignKey: "userID" })
-      this.hasMany(models.OrderDetail, { foreignKey: "orderID" })
-      this.hasMany(models.Payment, { foreignKey: "orderID" })
-      this.hasOne(models.Sales, { foreignKey: "orderID" })
+      this.belongsTo(models.Product, { foreignKey: "productID" })
+      this.belongsTo(models.Variant, { foreignKey: "variantID" })
     }
   }
-  Order.init(
+  Inventory.init(
     {
-      orderID: {
+      inventoryID: {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      userID: {
+      productID: {
         allowNull: false,
         type: DataTypes.UUID,
         references: {
-          model: "users",
-          key: "userID",
+          model: "products",
+          key: "productID",
         },
       },
-      dateOrdered: {
+      variantID: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.UUID,
+        references: {
+          model: "variants",
+          key: "variantID",
+        },
       },
-      shippingAddress: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      totalPrice: {
+      quantityInStock: {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      status: {
-        allowNull: false,
-        type: DataTypes.ENUM,
-        values: ["Processing", "Shipped", "Delivered"],
+      reOrderThreshold: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+      },
+      lastRestockDate: {
+        allowNull: true,
+        type: DataTypes.DATE,
       },
     },
     {
       sequelize,
-      modelName: "Order",
+      modelName: "Inventory",
     }
   )
-  return Order
+  return Inventory
 }
