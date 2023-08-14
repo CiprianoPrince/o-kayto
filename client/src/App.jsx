@@ -8,14 +8,20 @@ function App() {
       <Routes>
         <Route path='/' element={<MainLayout />}>
           <Route index element={<Home />} />
-          {/* <Route path='signin' element={<Signin />} /> */}
-          {/* <Route path='signup' element={<Signup />} /> */}
-          {/* <Route path='about' element={<About />} /> */}
-          {/* <Route path='contact' element={<Contact />} /> */}
-          {/* <Route path='cart' element={<Cart />} /> */}
-          {/* <Route path='wishlist' element={<Wishlist />} /> */}
-          {/* <Route path='checkout' element={<Checkout />} /> */}
-          {/* <Route path='settings' element={<Settings />} /> */}
+          <Route path='about' element={<About />} />
+          <Route path='contact' element={<Contact />} />
+          <Route path='cart' element={<Cart />} />
+          <Route path='wishlist' element={<Wishlist />} />
+          <Route path='checkout' element={<Checkout />} />
+          <Route path='settings' element={<Settings />} />
+        </Route>
+
+        <Route path='/' element={<MainLayout />}>
+          <Route path='signin' element={<Signin />} />
+          <Route path='signup' element={<Signup />} />
+        </Route>
+
+        <Route path='/' element={<MainLayout />}>
           <Route path='admin' element={<Admin />} />
         </Route>
       </Routes>

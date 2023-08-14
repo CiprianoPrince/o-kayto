@@ -15,19 +15,17 @@ import {
   showOnMdFlex,
   hideOnMd,
   showOnMd,
+  flexCenter,
 } from "../../../assets/css/variables"
 
 const navLinkCssClass = "fw-medium fs-6 text-white text-decoration-none "
 const navCssClass = "gap-3 "
-const flexCenter = "d-flex justify-content-center align-items-center "
-const flexCenterEnd = "d-flex justify-content-center align-items-end "
-const flexCenterStart = "d-flex justify-content-center align-items-start "
 
 const containerCss = "my-2 "
 const navbarCss = "flex-column py-3 "
 const stackCss = "px-2 py-1 "
 
-const iconSize = 40
+const iconSize = 35
 const iconColor = "white"
 
 const THEME_COLOR = {
@@ -46,10 +44,10 @@ const Header = () => {
           variant={THEME_COLOR.dark}
           className={navbarCss}
         >
-          <Container fluid="lg" className={containerCss}>
+          <Container fluid='lg' className={containerCss}>
             <Button className={hideOnMd}>
               <List color={iconColor} size={iconSize} />
-              <span>Menu</span>
+              {/* <span>Menu</span> */}
             </Button>
 
             <Link>
@@ -82,15 +80,15 @@ const Header = () => {
             </Stack>
           </Container>
 
-          <Container fluid="lg" className={containerCss}>
+          <Container fluid='lg' className={containerCss}>
             <Nav className={navCssClass + showOnMdFlex}>
-              <NavLink to='/t-shirt' className={navLinkCssClass}>
+              <NavLink to='adults-t-shirt' className={navLinkCssClass}>
                 Browse
               </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
+              <NavLink to='adults-t-shirt' className={navLinkCssClass}>
                 Adult Apparel
               </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
+              <NavLink to='kids-t-shirt' className={navLinkCssClass}>
                 Kids Apparel
               </NavLink>
               <NavLink to='' className={navLinkCssClass}>
