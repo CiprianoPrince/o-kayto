@@ -9,13 +9,14 @@ import {
   Stack,
 } from "react-bootstrap"
 import { Cart3, List, PersonCircle, Search } from "react-bootstrap-icons"
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useLocation } from "react-router-dom"
 import {
   hideOnMdFlex,
   showOnMdFlex,
   hideOnMd,
   showOnMd,
   flexCenter,
+  showOnSm,
 } from "../../../assets/css/variables"
 
 const navLinkCssClass = "fw-medium fs-6 text-white text-decoration-none "
@@ -36,6 +37,8 @@ const THEME_COLOR = {
 }
 
 const Header = () => {
+  const { pathname } = useLocation()
+  console.log(pathname.includes("collection"))
   return (
     <>
       <header>
@@ -47,10 +50,9 @@ const Header = () => {
           <Container fluid='lg' className={containerCss}>
             <Button className={hideOnMd}>
               <List color={iconColor} size={iconSize} />
-              {/* <span>Menu</span> */}
             </Button>
 
-            <Link>
+            <Link to='/'>
               <NavbarBrand>O-KAYTO</NavbarBrand>
             </Link>
 
@@ -80,26 +82,39 @@ const Header = () => {
             </Stack>
           </Container>
 
-          <Container fluid='lg' className={containerCss}>
-            <Nav className={navCssClass + showOnMdFlex}>
-              <NavLink to='adults-t-shirt' className={navLinkCssClass}>
-                Browse
-              </NavLink>
-              <NavLink to='adults-t-shirt' className={navLinkCssClass}>
-                Adult Apparel
-              </NavLink>
-              <NavLink to='kids-t-shirt' className={navLinkCssClass}>
-                Kids Apparel
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Home Goods
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Cases & Stickers
-              </NavLink>
-            </Nav>
+          {pathname.includes("collection") ? (
+            <Container fluid='lg' className={containerCss + showOnSm}>
+              <Nav className={navCssClass + showOnMdFlex}>
+                <NavLink to='collection' className={navLinkCssClass}>
+                  Browse
+                </NavLink>
+                <NavLink
+                  to='collection/adults-t-shirt'
+                  className={navLinkCssClass}
+                >
+                  Adult Apparel
+                </NavLink>
+                <NavLink
+                  to='collection/kids-t-shirt'
+                  className={navLinkCssClass}
+                >
+                  Kids Apparel
+                </NavLink>
+                <NavLink to='collection/home-goods' className={navLinkCssClass}>
+                  Home Goods
+                </NavLink>
+                <NavLink
+                  to='collection/cases-&-stickers'
+                  className={navLinkCssClass}
+                >
+                  Cases & Stickers
+                </NavLink>
+              </Nav>
+            </Container>
+          ) : null}
 
-            <InputGroup className={hideOnMdFlex}>
+          <Container fluid='lg' className={containerCss + hideOnMdFlex}>
+            <InputGroup>
               <Form.Control
                 placeholder='What are you looking for?'
                 aria-label='Search'
