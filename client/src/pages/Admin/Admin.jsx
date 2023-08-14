@@ -2,7 +2,7 @@ import { Container, Nav, Navbar } from "react-bootstrap"
 import { PersonCircle } from "react-bootstrap-icons"
 import DataTable from "react-data-table-component"
 
-export const Admin = () => {
+const Admin = () => {
   return (
     <>
       <Navbar
@@ -26,3 +26,5 @@ export const Admin = () => {
     </>
   )
 }
+
+export default Admin

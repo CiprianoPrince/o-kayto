@@ -9,25 +9,24 @@ import {
   Stack,
 } from "react-bootstrap"
 import { Cart3, List, PersonCircle, Search } from "react-bootstrap-icons"
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useLocation } from "react-router-dom"
 import {
   hideOnMdFlex,
   showOnMdFlex,
   hideOnMd,
   showOnMd,
+  flexCenter,
+  showOnSm,
 } from "../../../assets/css/variables"
 
 const navLinkCssClass = "fw-medium fs-6 text-white text-decoration-none "
 const navCssClass = "gap-3 "
-const flexCenter = "d-flex justify-content-center align-items-center "
-const flexCenterEnd = "d-flex justify-content-center align-items-end "
-const flexCenterStart = "d-flex justify-content-center align-items-start "
 
 const containerCss = "my-2 "
 const navbarCss = "flex-column py-3 "
 const stackCss = "px-2 py-1 "
 
-const iconSize = 40
+const iconSize = 35
 const iconColor = "white"
 
 const THEME_COLOR = {
@@ -38,6 +37,8 @@ const THEME_COLOR = {
 }
 
 const Header = () => {
+  const { pathname } = useLocation()
+  console.log(pathname.includes("collection"))
   return (
     <>
       <header>
@@ -46,13 +47,12 @@ const Header = () => {
           variant={THEME_COLOR.dark}
           className={navbarCss}
         >
-          <Container fluid="lg" className={containerCss}>
+          <Container fluid='lg' className={containerCss}>
             <Button className={hideOnMd}>
               <List color={iconColor} size={iconSize} />
-              <span>Menu</span>
             </Button>
 
-            <Link>
+            <Link to='/'>
               <NavbarBrand>O-KAYTO</NavbarBrand>
             </Link>
 
@@ -82,26 +82,39 @@ const Header = () => {
             </Stack>
           </Container>
 
-          <Container fluid="lg" className={containerCss}>
-            <Nav className={navCssClass + showOnMdFlex}>
-              <NavLink to='/t-shirt' className={navLinkCssClass}>
-                Browse
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Adult Apparel
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Kids Apparel
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Home Goods
-              </NavLink>
-              <NavLink to='' className={navLinkCssClass}>
-                Cases & Stickers
-              </NavLink>
-            </Nav>
+          {pathname.includes("collection") ? (
+            <Container fluid='lg' className={containerCss + showOnSm}>
+              <Nav className={navCssClass + showOnMdFlex}>
+                <NavLink to='collection' className={navLinkCssClass}>
+                  Browse
+                </NavLink>
+                <NavLink
+                  to='collection/adults-t-shirt'
+                  className={navLinkCssClass}
+                >
+                  Adult Apparel
+                </NavLink>
+                <NavLink
+                  to='collection/kids-t-shirt'
+                  className={navLinkCssClass}
+                >
+                  Kids Apparel
+                </NavLink>
+                <NavLink to='collection/home-goods' className={navLinkCssClass}>
+                  Home Goods
+                </NavLink>
+                <NavLink
+                  to='collection/cases-&-stickers'
+                  className={navLinkCssClass}
+                >
+                  Cases & Stickers
+                </NavLink>
+              </Nav>
+            </Container>
+          ) : null}
 
-            <InputGroup className={hideOnMdFlex}>
+          <Container fluid='lg' className={containerCss + hideOnMdFlex}>
+            <InputGroup>
               <Form.Control
                 placeholder='What are you looking for?'
                 aria-label='Search'
