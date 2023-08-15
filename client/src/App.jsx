@@ -1,6 +1,9 @@
 import { Routes, Route } from "react-router-dom"
 import MainLayout from "./components/layout/MainLayout"
 import Home from "./pages/Home/Home"
+import Signin from "./pages/Signin/Signin"
+
+
 function App() {
   return (
     <>
@@ -16,6 +19,8 @@ function App() {
           {/* <Route path='checkout' element={<Checkout />} /> */}
           {/* <Route path='settings' element={<Settings />} /> */}
           {/* <Route path='admin' element={<Admin />} /> */}
+
+        
         </Route>
       </Routes>
     </>
