@@ -8,9 +8,12 @@
     "start": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tailwind": "npx tailwindcss -i ./input.css -o ./src/index.css --watch",
+    "prettier": "npx prettier ./src/**/*.{html,js,jsx} --write"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.2.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
@@ -28,10 +31,12 @@
     "react-router-hash-link": "^2.4.3",
     "react-select": "^5.7.4",
     "sass": "^1.65.1",
+    "swiper": "^10.2.0",
     "uuid": "^9.0.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
@@ -41,6 +46,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.27",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
+    "tailwindcss": "^3.3.3",
     "vite": "^4.4.5"
   }
 }

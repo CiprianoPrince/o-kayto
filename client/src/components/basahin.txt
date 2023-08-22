@@ -1,3 +1,0 @@
-dito lalagay mga GLOBAL components e.g header and footer at mga buttons 
-
-"GLOBAL" meaning makikita mo sya sa 2 and more pages 

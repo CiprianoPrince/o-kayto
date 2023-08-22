@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 :root {
@@ -71,6 +71,6 @@ font-size: var(--bgm-fs-4) !important;
 .bgm-fs-5 {
 font-size: var(--bgm-fs-5) !important;
 }
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;

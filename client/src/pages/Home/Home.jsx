@@ -1,20 +1,29 @@
-import { Container } from "react-bootstrap"
-import { Main } from "../../components/layout/Frontend"
-import { Link } from "react-router-dom"
-
-const heroContainerCss = ""
+import Carousel from "./sections/Carousel"
+import "../../index.css"
 
 const Home = () => {
   return (
-    <Main>
-      <Container className='bg-success h-75' fluid as='section'>
-        <h1>Dress the Best, Forget the Rest:</h1>
-        <p>Discover the latest trends and timeless classics.</p>
-        <Link to='collection'>Check Collection</Link>
-      </Container>
+    <main className=''>
+      <section className='container mx-auto px-4 py-10 border-2 border-black-950'>
+        <Carousel />
+      </section>
 
-      <Container fluid as='section'></Container>
-    </Main>
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+
+      <section className='container mx-auto border-2 border-black-950'>Services</section>
+    </main>
   )
 }
 

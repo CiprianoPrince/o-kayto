@@ -1,7 +1,7 @@
-import React from "react"
-import styled from "styled-components"
-import { NavLink as RRDNavLink } from "react-router-dom"
-import { NavItem } from "react-bootstrap"
+import React from "react";
+import styled from "styled-components";
+import { NavLink as RRDNavLink } from "react-router-dom";
+import { NavItem } from "react-bootstrap";
 
 const NavLink = ({
   children,
@@ -17,9 +17,9 @@ const NavLink = ({
         </NavLinkStyled>
       </NavItem>
     </>
-  )
-}
-export default NavLink
+  );
+};
+export default NavLink;
 
 const NavLinkStyled = styled(RRDNavLink)`
   position: relative;
@@ -33,11 +33,21 @@ const NavLinkStyled = styled(RRDNavLink)`
     bottom: 0;
     position: absolute;
     background: hsl(140, 20%, 91%);
-    transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    -webkit-transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    -moz-transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    -ms-transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    -o-transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    transition:
+      width 0.3s ease 0s,
+      left 0.3s ease 0s;
+    -webkit-transition:
+      width 0.3s ease 0s,
+      left 0.3s ease 0s;
+    -moz-transition:
+      width 0.3s ease 0s,
+      left 0.3s ease 0s;
+    -ms-transition:
+      width 0.3s ease 0s,
+      left 0.3s ease 0s;
+    -o-transition:
+      width 0.3s ease 0s,
+      left 0.3s ease 0s;
   }
 
   &:hover:after {
@@ -49,4 +59,4 @@ const NavLinkStyled = styled(RRDNavLink)`
     width: 100%;
     left: 0;
   }
-`
+`;
