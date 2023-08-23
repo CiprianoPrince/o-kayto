@@ -1,71 +1,140 @@
-import React from "react"
+import React, {useState,useEffect} from 'react'
 
 const Signup = () => {
-  return 
-  <div>
-    <form>
-!-- 2 column grid layout with text inputs for the first and last names --
-  <div class="row mb-4">
-    <div class="col">
-      <div class="form-outline">
-        <input type="text" id="form3Example1" class="form-control" />
-        <label class="form-label" for="form3Example1">First name</label>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-outline">
-        <input type="text" id="form3Example2" class="form-control" />
-        <label class="form-label" for="form3Example2">Last name</label>
-      </div>
-    </div>
-  </div>
+    const [fullname,setFullname] = useState(null);
+    const [email,setEmail] = useState(null);
+    const [phone,setPhone] = useState(null);
+    const [address,setAddress] = useState(null);
+    const [password,setPassword] = useState(null);
+    const [r_password,setRepeatPass] = useState(null);
 
- -- Email input --
-  <div class="form-outline mb-4">
-    <input type="email" id="form3Example3" class="form-control" />
-    <label class="form-label" for="form3Example3">Email address</label>
-  </div>
-
-  -- Password input --
-  <div class="form-outline mb-4">
-    <input type="password" id="form3Example4" class="form-control" />
-    <label class="form-label" for="form3Example4">Password</label>
-  </div>
-
--- Checkbox --
-  <div class="form-check d-flex justify-content-center mb-4">
-    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-    <label class="form-check-label" for="form2Example33">
-      Subscribe to our newsletter
-    </label>
-  </div>
-
-  -- Submit button --
-  <button type="submit" class="btn btn-primary btn-block mb-4">Sign up</button>
-
--- Register buttons --
-  <div class="text-center">
-    <p>or sign up with:</p>
-    <button type="button" class="btn btn-secondary btn-floating mx-1">
-      <i class="fab fa-facebook-f"></i>
-    </button>
-
-    <button type="button" class="btn btn-secondary btn-floating mx-1">
-      <i class="fab fa-google"></i>
-    </button>
-
-    <button type="button" class="btn btn-secondary btn-floating mx-1">
-      <i class="fab fa-twitter"></i>
-    </button>
-
-    <button type="button" class="btn btn-secondary btn-floating mx-1">
-      <i class="fab fa-github"></i>
-    </button>
-  </div>
-</form>
+    const registered_user_list = JSON.parse(localStorage.getItem('registered_user'));
+    const [registered_user,setRegisteredUser] = useState( registered_user_list ? registered_user_list : []);
+    const [showValidation,setShowValidation] = useState({active: false, message: null});
 
 
-    </div>
+    const CheckDuplicateEmail = () =>{
+        let is_exisisting = false;
+        registered_user.forEach(user_Data =>{
+            if(email === user_Data.email){
+                is_exisisting = true;
+            }
+        })
+
+        return is_exisisting;
+    }
+    
+    const CheckPassPattern = () =>{
+        let is_valid = false;
+        if (password.match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/")){
+            is_valid = true;
+        }
+        
+        return is_valid;
+    }
+
+    const CheckConfirmPass = () =>{
+        let is_not_same = false;
+        if(password !== r_password){
+            is_not_same = true;
+        }
+
+        return is_not_same;
+    }
+
+    const registerAccount = (e) =>{
+        e.preventDefault();
+        
+        if(CheckDuplicateEmail()){
+            setShowValidation({active: true, message: "Email already in use, please try again."});
+        }else if(CheckPassPattern()){
+            setShowValidation({active: true, message: "Passwords needs to contain at least one numeric digit, one uppercase and one lowercase letter"});
+        }else if(CheckConfirmPass()){
+            setShowValidation({active: true, message: "Passwords do not match"});
+        }else{
+           
+            let registration_data = 
+            {
+                id: Date.now(),
+                fullname: fullname,
+                email: email,
+                password: password,
+                phone: phone,
+                address: address,
+               
+            }
+
+            
+            setRegisteredUser([...registered_user, registration_data])
+            alert("ACCOUNT REGISTERED!")
+            window.location = window.origin + "/login"
+        }
+
+    }
+
+
+    useEffect(()=>{
+        localStorage.setItem('registered_user', JSON.stringify(registered_user))
+    },[registered_user])
+
+  return (
+        <div className="container">
+            <div className="card text-black mt-5 b-shadow rounded-3">
+                <div className="card-body p-md-5">
+                <div className="row d-flex flex-row justify-content-center">
+                    <div className="animated left col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                    <p className="text-center h1 fw-bold mb-3 mt-4 th-color-1">Account Sign Up</p>
+                    <p className="text-center">Already have an account?<a href="signin">Log in</a></p>
+
+                    <form onSubmit={registerAccount} className="mx-1 mx-md-4 d-flex flex-column row-gap-3">
+                        
+                        {/* <label htmlFor="fullname">Full Name:</label>                     */}
+                        <input required onChange={(e) => setFullname(e.target.value)} type="text" name="fullname" placeholder="Enter Full Name" className="user-information form-control" />
+                       
+                        {/* <label htmlFor="email">Email Address:</label>        */}
+                        <input required onChange={(e) => setEmail(e.target.value)} type="email" name="email" placeholder="Enter Email" className="user-information form-control" />
+                       
+                        {/* <label htmlFor="phonenumber">Phone NUmber:</label>    */}
+                        <input maxLength={11} onChange={(e) => setPhone(e.target.value)} type="number" name="phone" placeholder="Enter Phone" className="user-information form-control" />
+
+                        {/* <label htmlFor="address">Address:</label>   */}
+                        <input required onChange={(e) => setAddress(e.target.value)} type="text"  name="address" placeholder="Enter Address" className="user-information form-control" />
+                       
+                        {/* <label htmlFor="password">Password:</label> */}
+                        <input  required onChange={(e) => setPassword(e.target.value)} pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$" type="password" name="password" placeholder="Enter Password" className="user-information form-control" />
+                        
+                        {/* <label htmlFor="confirmpassword">Confirm Password:</label> */}
+                        <input type="password" required onChange={(e) => setRepeatPass(e.target.value)} name="r-password" placeholder="Confirm Password" className="user-information form-control" /> 
+                        
+                        {
+                            showValidation.active ? 
+                                <div className={`alert alert-danger mt-2`} role="alert">
+                                    {showValidation.message}
+                                </div>
+                            : false
+                        }
+                
+                        {/* <button type='submit' className='btn px-4 th-color-1 fw-bold mt-2 w-100'>
+                            Sign up
+                        </button> */}
+                        <button type="submit" className="btn btn-primary btn-block mb-4">Create my account</button>
+                        <span>By clicking <i>Create Account,</i> you are agreeing to our <a href="Terms">Terms & Conditions</a> and <a href="Privacy Policy">Privacy Policy</a>, and to receive our promotional emails (opt out any time).</span>
+
+                    </form>
+
+                    </div>
+                    {/* <div className="animated right col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                        className="img-fluid" alt="Sample image"/>
+                    </div> */}
+                </div>
+                </div>
+            </div>            
+        </div>
+
+  )
 }
 
 export default Signup
