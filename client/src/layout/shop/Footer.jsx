@@ -5,12 +5,12 @@ const Footer = () => {
   return (
     <footer className="mt-auto bg-secondary-100">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-wrap items-start justify-between gap-10 max-lg:flex-col">
+        <div className="flex flex-wrap items-start justify-evenly gap-10 max-lg:flex-col">
           <div className="flex flex-col items-start">
             <a href="/">
               <img src={okaytoLogo} alt="logo" width={150} height={46} className="m-0" />
             </a>
-            <p className="[ ] mt-6 font-montserrat text-base font-semibold leading-7 text-secondary-500 sm:max-w-sm">
+            <p className="mt-6 font-montserrat text-base font-semibold leading-7 text-secondary-500 sm:max-w-sm">
               Specializes in providing high-quality, stylish products for your wardrobe.
             </p>
             <div className="mt-8 flex items-center gap-5">
@@ -25,7 +25,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="[ ] flex w-full flex-1 flex-wrap gap-20 lg:gap-10">
+          <div className="flex w-full flex-1 flex-wrap gap-20 lg:gap-10">
             {footerLinks.map((section) => (
               <div className="flex-1" key={section.title}>
                 <h4 className="mb-6 font-montserrat text-2xl font-semibold  uppercase leading-normal text-secondary-700">

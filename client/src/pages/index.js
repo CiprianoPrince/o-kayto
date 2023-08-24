@@ -4,7 +4,7 @@ export { default as Admin } from './admin/Admin';
 export { default as Cart } from './cart/Cart';
 export { default as Checkout } from './checkout/Checkout';
 export { default as Payment } from './payment/Payment';
-export { default as Collection } from './collection/Collection';
+export { default as Shop } from './shop/Shop';
 export { default as Contact } from './contact/Contact';
 export { default as Home } from './home/Home';
 export { default as Signin } from './signin/Signin';

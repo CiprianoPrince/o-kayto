@@ -5,15 +5,21 @@ const NavMenu = () => {
     <nav className="[ ] hidden lg:block" aria-label="main">
       <ul className="flex items-center justify-center space-x-4">
         <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">Shop</NavLink>
+          <NavLink to="shop" className="block px-3 py-1">
+            Shop
+          </NavLink>
         </li>
 
         <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">Most Wanted</NavLink>
+          <NavLink to="shop" className="block px-3 py-1">
+            Most Wanted
+          </NavLink>
         </li>
 
         <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">New Arrival</NavLink>
+          <NavLink to="shop" className="block px-3 py-1">
+            New Arrival
+          </NavLink>
         </li>
       </ul>
     </nav>

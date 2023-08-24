@@ -7,7 +7,7 @@ import {
   Admin,
   Cart,
   Checkout,
-  Collection,
+  Shop,
   Contact,
   Home,
   Payment,
@@ -22,9 +22,11 @@ function App() {
       <Routes>
         <Route path="/" element={<ShopLayout />}>
           <Route index element={<Home />} />
-          <Route path="collection">
-            <Route index element={<Collection />} />
-            <Route path=":category" element={<Collection />} />
+          <Route path="shop">
+            <Route index element={<Shop />} />
+            <Route path=":category" element={<Shop />}>
+              <Route path=":slug" element={<Shop />} />
+            </Route>
           </Route>
 
           <Route path="about" element={<About />} />

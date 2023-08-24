@@ -1,8 +1,8 @@
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { example } from '../../assets/images/products';
 import { BreadCrumb } from '../../components/ui';
-
-import '../../index.css';
 import { Link } from 'react-router-dom';
+import '../../index.css';
 const Payment = () => {
   return (
     <main>
@@ -191,6 +191,41 @@ const Payment = () => {
           </div>
         </div>
       </section>
+
+      {/* <section className="absolute bottom-0 left-0 right-0 top-0 z-20 flex min-h-full items-start justify-center bg-slate-900/50 p-4">
+        <div className="sticky top-4 w-full max-w-2xl space-y-4 divide-y-2 divide-secondary-900/30 rounded-lg border bg-primary-50 p-4 shadow-sm shadow-white ring-1 ring-secondary-900/5">
+          <div className="text-center">
+            <CheckCircleIcon className="mx-auto h-20 w-20 text-accent-500" />
+            <p className="header-3 text-xl font-medium leading-10 tracking-tight">
+              Thanks for your order!
+            </p>
+            <p className="font-medium text-secondary-500">
+              The order confirmation has been sent to prince@email.com
+            </p>
+          </div>
+
+          <div className="py-4">
+            <h2 className="header-4 tracking-tight text-secondary-700">Transaction Date</h2>
+            <time className="font-medium text-secondary-500" dateTime="2022-11-17">
+              Thursday, November 17, 2022 (GMT+7)
+            </time>
+          </div>
+
+          <div className="py-4">
+            <h2 className="header-4 tracking-tight text-secondary-700">Transaction Date</h2>
+            <time className="font-medium text-secondary-500" dateTime="2022-11-17">
+              Thursday, November 17, 2022 (GMT+7)
+            </time>
+          </div>
+
+          <div className="py-4">
+            <h2 className="header-4 tracking-tight text-secondary-700">Transaction Date</h2>
+            <time className="font-medium text-secondary-500" dateTime="2022-11-17">
+              Thursday, November 17, 2022 (GMT+7)
+            </time>
+          </div>
+        </div>
+      </section> */}
     </main>
   );
 };
