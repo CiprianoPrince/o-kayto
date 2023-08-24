@@ -10,7 +10,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "tailwind": "npx tailwindcss -i ./input.css -o ./src/index.css --watch",
-    "prettier": "npx prettier ./src/**/*.{html,js,jsx} --write"
+    "prettier": "npx prettier ./src/**/**/*.{html,js,jsx} --write"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",

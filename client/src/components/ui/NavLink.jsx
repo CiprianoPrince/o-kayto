@@ -1,12 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { NavLink as RRDNavLink } from "react-router-dom";
-import { NavItem } from "react-bootstrap";
+import styled from 'styled-components';
+import { NavLink as RRDNavLink } from 'react-router-dom';
+import { NavItem } from 'react-bootstrap';
 
 const NavLink = ({
   children,
   to,
-  className = "nav-link text-light fw-bold",
+  className = 'nav-link text-light fw-bold',
   callback = () => {},
 }) => {
   return (
@@ -25,7 +24,7 @@ const NavLinkStyled = styled(RRDNavLink)`
   position: relative;
 
   &:after {
-    content: "";
+    content: '';
     display: block;
     height: 3px;
     width: 0;

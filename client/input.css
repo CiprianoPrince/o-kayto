@@ -25,6 +25,16 @@ svg {
   max-width: 100%;
 }
 
+@layer base {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+}
+
 @layer components {
   .container {
     @apply w-full mr-auto ml-auto px-4 sm:max-w-[640px] md:max-w-[1024px] lg:max-w-[1024px] xl:max-w-[1024px] 2xl:max-w-[1280px];

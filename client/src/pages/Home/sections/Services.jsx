@@ -1,7 +1,5 @@
-
-
 const Services = () => {
-  return <></>
-}
+  return <></>;
+};
 
-export default Services
+export default Services;

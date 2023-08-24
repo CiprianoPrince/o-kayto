@@ -1,22 +1,22 @@
-import { Swiper, SwiperSlide } from "swiper/react"
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
-import "swiper/css"
-import "swiper/css/effect-fade"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // import required modules
-import { EffectFade, Navigation, Pagination } from "swiper/modules"
+import { EffectFade, Navigation, Pagination } from 'swiper/modules';
 
-import { carousel1, carousel2 } from "../../../assets/images"
+import { carousel1, carousel2 } from '../../../assets/images';
 
 const Carousel = () => {
   return (
     <Swiper
-      className='h-[20rem]'
+      className="h-[20rem]"
       spaceBetween={30}
-      effect={"fade"}
+      effect={'fade'}
       navigation={true}
       pagination={{
         clickable: true,
@@ -24,22 +24,22 @@ const Carousel = () => {
       modules={[EffectFade, Navigation, Pagination]}
     >
       <SwiperSlide>
-        <img className='object-cover oblect-center w-full' src={carousel1} />
+        <img className="oblect-center w-full object-cover" src={carousel1} />
       </SwiperSlide>
 
       <SwiperSlide>
-        <img className='object-cover oblect-center w-full' src={carousel2} />
+        <img className="oblect-center w-full object-cover" src={carousel2} />
       </SwiperSlide>
 
       <SwiperSlide>
-        <img className='object-cover oblect-   w-full' src={carousel1} />
+        <img className="oblect- w-full   object-cover" src={carousel1} />
       </SwiperSlide>
 
       <SwiperSlide>
-        <img className='object-cover oblect-center   w-full' src={carousel1} />
+        <img className="oblect-center w-full   object-cover" src={carousel1} />
       </SwiperSlide>
     </Swiper>
-  )
-}
+  );
+};
 
-export default Carousel
+export default Carousel;

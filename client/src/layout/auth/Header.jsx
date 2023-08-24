@@ -1,24 +1,24 @@
-import { Link, NavLink } from "react-router-dom"
-import { okaytoLogo } from "../../assets/images"
+import { Link, NavLink } from 'react-router-dom';
+import { okaytoLogo } from '../../assets/images';
 
 const Header = () => {
   // const { pathname } = useLocation()
   return (
     <>
-      <header className='bg-primary-100  text-secondary-800 fixed top-0 w-full'>
-        <div className='container | flex justify-between items-center mx-auto p-4'>
-          <Link className='w-[8rem]' to='/'>
-            <img className='' src={okaytoLogo} alt='' />
+      <header className="fixed  top-0 w-full bg-primary-100 text-secondary-800">
+        <div className="| container mx-auto flex items-center justify-between p-4">
+          <Link className="w-[8rem]" to="/">
+            <img className="" src={okaytoLogo} alt="" />
           </Link>
 
-          <nav className='flex justify-end items-center gap-4 [ lg:w-full max-w-sm ]'>
-            <NavLink className='font-semibold text-accent-500 rounded-full px-3 py-2' to='signin'>
+          <nav className="[ ] flex max-w-sm items-center justify-end gap-4 lg:w-full">
+            <NavLink className="rounded-full px-3 py-2 font-semibold text-accent-500" to="signin">
               Sign in
             </NavLink>
 
             <NavLink
-              className='font-semibold text-accent-500 rounded-full bg-accent-100 px-3 py-2'
-              to='signup'
+              className="rounded-full bg-accent-100 px-3 py-2 font-semibold text-accent-500"
+              to="signup"
             >
               Sign up
             </NavLink>
@@ -26,7 +26,7 @@ const Header = () => {
         </div>
       </header>
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

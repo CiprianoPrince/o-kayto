@@ -1,22 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
+import { DropDownContainer } from '../../../components/ui';
 
 const Bars3Menu = () => {
   return (
-    <nav aria-label="menu">
-      <ul className="flex flex-col">
-        <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">Collection</NavLink>
-        </li>
-
-        <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">Collection</NavLink>
-        </li>
-
-        <li className="text-lg font-semibold">
-          <NavLink className="block px-3 py-1">Collection</NavLink>
-        </li>
-      </ul>
-    </nav>
+    <DropDownContainer>
+      <NavLink className="[ ] block rounded-lg px-3 py-1 hover:bg-primary-100/50">
+        Collection
+      </NavLink>
+      <NavLink className="[ ] block rounded-lg px-3 py-1 hover:bg-primary-100/50">
+        Collection
+      </NavLink>
+      <NavLink className="[ ] block rounded-lg px-3 py-1 hover:bg-primary-100/50">
+        Collection
+      </NavLink>
+    </DropDownContainer>
   );
 };
 

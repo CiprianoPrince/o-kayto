@@ -1,14 +1,10 @@
-import { Nav, Navbar } from "react-bootstrap";
-import { PersonCircle } from "react-bootstrap-icons";
+import { Nav, Navbar } from 'react-bootstrap';
+import { PersonCircle } from 'react-bootstrap-icons';
 
 const Header = () => {
   return (
     <>
-      <Navbar
-        bg="primary"
-        variant="dark"
-        className="d-flex justify-content-between"
-      >
+      <Navbar bg="primary" variant="dark" className="d-flex justify-content-between">
         <Navbar.Brand href="#home">Admin Dashboard</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="#home">Home</Nav.Link>
