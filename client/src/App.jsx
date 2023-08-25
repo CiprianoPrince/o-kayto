@@ -1,9 +1,19 @@
 import { Routes, Route } from "react-router-dom"
-import MainLayout from "./components/layout/MainLayout"
+import MainLayout from "./components/layout/Frontend/Layout"
 import Home from "./pages/Home/Home"
 // import Checkout from "./pages/Checkout/Checkout"
 import Payment from "./pages/Checkout/Payment"
 
+import Collection from "./pages/Collection/Collection"
+import About from "./pages/About/About"
+import Contact from "./pages/Contact/Contact"
+import Cart from "./pages/Cart/Cart"
+import Wishlist from "./pages/Wishlist/Wishlist"
+import Checkout from "./pages/Checkout/Checkout"
+import Settings from "./pages/Settings/Settings"
+import Signin from "./pages/Signin/Signin"
+import Signup from "./pages/Signup/Signup"
+import Admin from "./pages/Admin/Admin"
 function App() {
   return (
     <>
