@@ -26,8 +26,8 @@ function App() {
           {/* <Route path='contact' element={<Contact />} /> */}
           {/* <Route path='cart' element={<Cart />} /> */}
           {/* <Route path='wishlist' element={<Wishlist />} /> */}
-          {/* <Route path='Checkout' element={<Checkout />} /> */}
-          <Route path='Payment' element={<Payment/>} />
+          <Route path='Checkout' element={<Checkout />} />
+          {/* <Route path='Payment' element={<Payment/>} /> */}
           {/* <Route path='settings' element={<Settings />} /> */}  
           {/* <Route path='admin' element={<Admin />} /> */}
         </Route>
