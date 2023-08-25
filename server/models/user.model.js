@@ -1,37 +1,60 @@
 "use strict"
 const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-
     static associate(models) {
       // define association here
+      this.hasMany(models.Cart, { foreignKey: "userID" })
+      this.hasMany(models.Order, { foreignKey: "userID" })
+      this.hasMany(models.Wishlist, { foreignKey: "userID" })
+      this.hasMany(models.PaymentMethod, { foreignKey: "userID" })
+      this.hasMany(models.Sales, { foreignKey: "userID" })
     }
   }
-  user.init(
+  User.init(
     {
-      id: {
-        defaultValue: DataTypes.UUIDV4,
+      userID: {
         primaryKey: true,
-        type: DataTypes.UUID,
-      },
-      name: {
-        type: DataTypes.STRING,
         allowNull: false,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      firstName: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      lastName: {
+        allowNull: false,
+        type: DataTypes.STRING,
       },
       email: {
-        type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
+        type: DataTypes.STRING,
+      },
+      address: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      phone: {
+        allowNull: true,
+        type: DataTypes.BIGINT,
+      },
+      dateRegistered: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
-      modelName: "user",
+      modelName: "User",
     }
   )
-  return user
+  return User
 }

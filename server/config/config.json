@@ -1,16 +1,16 @@
 {
   "development": {
-    "username": "admin",
+    "username": "root",
     "password": "Melvintot@16",
-    "database": "node-starter",
+    "database": "okayto",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "password": "",
+    "database": "okayto",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "production": {

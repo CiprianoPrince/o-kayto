@@ -1,0 +1,38 @@
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+  background-color: antiquewhite        ;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.price h1 {
+  font-weight: 300;
+  font-weight: bold;
+  color: darkblue;
+  letter-spacing: 2px;
+}
+
+.card {
+  margin-top: 30px;
+  margin-bottom:35vh;
+  width: 520px;
+  height: 400px;
+}
+
+
+.card .row:last-child {
+  border: none;
+}
+
+.mop {
+    height: 140px;
+    width: 140px;
+}
