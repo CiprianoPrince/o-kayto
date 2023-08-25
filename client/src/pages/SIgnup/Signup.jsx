@@ -57,7 +57,7 @@ const Signup = () => {
             {
                 id: Date.now(),
                 fullname: fullname,
-                email: email,
+                 email: email,
                 password: password,
                 phone: phone,
                 address: address,
