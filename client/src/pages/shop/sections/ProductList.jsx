@@ -1,9 +1,9 @@
-import Product from './Product';
+import ProductCard from './ProductCard';
 
 const ProductList = () => {
   return (
     <>
-      {new Array(10).fill(<Product />).map((Products) => {
+      {new Array(10).fill(<ProductCard />).map((Products) => {
         {
           return Products;
         }

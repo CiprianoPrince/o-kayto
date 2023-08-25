@@ -29,9 +29,10 @@ const BreadCrumb = ({ children }) => {
 const BreadCrumbItem = ({ to, children, isDisabled, ...props }) => {
   const location = useLocation();
   const isActive =
-    location.pathname === to
+    `${location.pathname}${location.search}` === to
       ? 'text-accent-500 [ hover:text-accent-700 '
       : 'text-secondary-400 [ hover:text-accent-400 ]';
+  console.log(`${location.pathname}${location.search}`, to);
   return (
     <li>
       {isDisabled ? (

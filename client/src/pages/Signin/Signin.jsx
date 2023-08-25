@@ -1,11 +1,27 @@
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const schema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
 
 const Signin = () => {
+  const { register, handleSubmit, formState, reset } = useForm({
+    resolver: zodResolver(schema),
+  });
+  const { error } = formState;
+
+  const handleFormData = () => {};
+
   return (
     <main>
       <section className="container mx-auto flex min-h-screen items-center justify-center px-4 py-4">
         <div className="w-full max-w-lg rounded-lg p-8 shadow-xl ring-1 ring-inset ring-secondary-900/5">
           <h1 className="header-1 text-center">O-kayto Login</h1>
+
           <p className="mb-4 text-center font-semibold text-secondary-950">
             New here?{' '}
             <Link
@@ -15,17 +31,18 @@ const Signin = () => {
               Create an account.
             </Link>
           </p>
-          <form className="flex flex-col space-y-4">
+
+          <form className="flex flex-col space-y-4" onSubmit={handleSubmit(handleFormData)}>
             <div>
               <label className="form-label | block" htmlFor="email">
                 Email address
               </label>
               <input
                 className="form-control | px-3 py-2"
+                {...register('email')}
                 type="email"
-                name="email"
                 id="email"
-                placeholder=""
+                placeholder="Enter your registered email"
               />
             </div>
 
@@ -35,10 +52,10 @@ const Signin = () => {
               </label>
               <input
                 className="form-control | px-3 py-2"
+                {...register('password')}
                 type="password"
-                name="password"
                 id="password"
-                placeholder=""
+                placeholder="Enter your password"
               />
             </div>
 

@@ -49,6 +49,22 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "OrderDetail",
+      hooks: {
+        afterCreate: async (orderDetail, options) => {
+          // Fetch the inventory record for the ordered product
+          const inventory = await sequelize.models.Inventory.findOne({
+            where: { productID: orderDetail.productID }
+          });
+
+          if (inventory) {
+            // Decrease the quantity in stock
+            inventory.quantityInStock -= orderDetail.quantity;
+
+            // Save the updated inventory record
+            await inventory.save();
+          }
+        }
+      }
     }
   )
   return OrderDetail

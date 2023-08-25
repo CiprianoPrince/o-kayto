@@ -16,12 +16,16 @@ import {
   Wishlist,
 } from './pages';
 
+import useScrolltoTop from './hooks/useScrolltoTop';
+
 function App() {
+  useScrolltoTop();
   return (
     <>
       <Routes>
         <Route path="/" element={<ShopLayout />}>
           <Route index element={<Home />} />
+
           <Route path="shop">
             <Route index element={<Shop />} />
             <Route path=":category" element={<Shop />}>
@@ -38,12 +42,12 @@ function App() {
           <Route path="settings" element={<Account />} />
         </Route>
 
-        <Route path="/" element={<AuthLayout />}>
+        <Route element={<AuthLayout />}>
           <Route path="signin" element={<Signin />} />
           <Route path="signup" element={<Signup />} />
         </Route>
 
-        <Route path="/" element={<ShopLayout />}>
+        <Route element={<ShopLayout />}>
           <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>

@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.ProductSize, { foreignKey: "productID" })
       this.hasMany(models.SaleDetail, { foreignKey: "saleID" })
       this.hasMany(models.Variant, { foreignKey: "productID" })
-      this.hasMany(models.Inventory, { foreignKey: "productID" })
+      this.hasOne(models.Inventory, { foreignKey: "productID" })
       this.hasOne(models.Image, { foreignKey: "productID" })
     }
   }
@@ -40,9 +40,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      quantityInStock: {
+      InventoryID: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+         references: {
+          model: "inventories",
+          key: "InventoryID",
+        },
       },
       categoryID: {
         allowNull: false,

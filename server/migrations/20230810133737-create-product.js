@@ -21,9 +21,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      quantityInStock: {
+      InventoryID: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        references: {
+          model: "inventories",
+          key: "InventoryID",
+        },
       },
       categoryID: {
         allowNull: false,
