@@ -1,62 +1,64 @@
-require("dotenv").config()
-const express = require("express")
-const helmet = require("helmet")
-const rateLimit = require("express-rate-limit")
-// const winston = require("winston")
-const errorLogger = require("./logger")
-const expressWinston = require("express-winston")
+// Load environment variables
+require('dotenv').config();
 
-const app = express()
+// External dependencies
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const expressWinston = require('express-winston');
 
-// Request logger (can log all incoming requests)
-// app.use(
-//   expressWinston.logger({
-//     transports: [new winston.transports.Console()],
-//     format: winston.format.combine(
-//       winston.format.colorize(),
-//       winston.format.json()
-//     ),
-//     meta: true, // optional: log meta data about request (defaults to true)
-//     msg: "HTTP {{req.method}} {{req.url}}", // Customize the default logging message
-//     expressFormat: true, // Use the default Express/morgan request formatting
-//     colorize: true, // Color the text
-//     ignoreRoute: (req, res) => false, // optional: allows to skip some log messages based on the request and/or response
-//   })
-// )
+// Internal dependencies
+const errorLogger = require('./middleware/logger.middleware');
+const credentials = require('./middleware/credentials.middleware');
+const verifyJWT = require('./middleware/verifyJWT.middleware');
+const corsOptions = require('./config/corsOptions');
+const db = require('./models');
+
+const app = express();
+
+// Logging
 app.use(
-  expressWinston.errorLogger({
-    winstonInstance: errorLogger,
-  })
-)
+    expressWinston.errorLogger({
+        winstonInstance: errorLogger,
+    })
+);
 
-// Error logger (logs all errors)
-// app.use(
-//   expressWinston.errorLogger({
-//     transports: [
-//       new winston.transports.Console({
-//         json: true,
-//         colorize: true,
-//       }),
-//     ],
-//   })
-// )
+// Security and request handling
+app.use(credentials);
 
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-})
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 
-app.use("/api/", apiLimiter)
-app.use(helmet())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(
+    rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100,
+    })
+);
+app.use(helmet());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cookieParser());
 
-const db = require("./models")
-db.sequelize.sync().then().catch()
+// Database initialization
+db.sequelize
+    .sync()
+    .then(() => console.log('Database synced successfully.'))
+    .catch((err) => console.error('Error syncing database:', err));
 
-// require("./routes/user.routes")(app)
+// Routes
+require('./routes/auth.routes')(app);
+require('./routes/register.routes')(app);
+require('./routes/refresh.routes')(app);
+require('./routes/logout.routes')(app);
 
-const PORT = process.env.PORT || 8000
+// JWT Verification for API routes
+app.use(verifyJWT);
+
+// Start server
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`)
-})
+    console.log(`listening on port ${PORT}`);
+});

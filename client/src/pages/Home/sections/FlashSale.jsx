@@ -1,5 +1,5 @@
 const FlashSale = () => {
-  return <div>FlashSale</div>;
+    return <div>FlashSale</div>;
 };
 
 export default FlashSale;

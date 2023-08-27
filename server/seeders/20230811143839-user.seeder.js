@@ -1,23 +1,23 @@
-"use strict"
+'use strict';
 
-const generateFakeUser = require("../helpers/generateFakeUser")
+const generateFakeUser = require('../helpers/generateFakeUser');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    /**
+    async up(queryInterface, Sequelize) {
+        /**
      * Add seed commands here.
      *
      Example:
      */
-    await queryInterface.bulkInsert(
-      "Users",
-      new Array(100).fill(undefined).map(generateFakeUser),
-      {}
-    )
-  },
+        await queryInterface.bulkInsert(
+            'Users',
+            new Array(10).fill(undefined).map(generateFakeUser),
+            {}
+        );
+    },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Users", null, {})
-  },
-}
+    async down(queryInterface, Sequelize) {
+        await queryInterface.bulkDelete('Users', null, {});
+    },
+};

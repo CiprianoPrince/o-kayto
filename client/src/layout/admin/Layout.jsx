@@ -3,13 +3,13 @@ import Header from './Header';
 import Footer from './Footer';
 
 const AdminLayout = () => {
-  return (
-    <>
-      <Header />
-      <Outlet />
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <Outlet />
+            <Footer />
+        </>
+    );
 };
 
 export default AdminLayout;

@@ -1,5 +1,5 @@
 const NewArrival = () => {
-  return <div>NewArrival</div>;
+    return <div>NewArrival</div>;
 };
 
 export default NewArrival;

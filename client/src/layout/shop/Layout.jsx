@@ -3,13 +3,13 @@ import Footer from './Footer';
 import { Header } from './header';
 
 const MainLayout = () => {
-  return (
-    <>
-      <Header />
-      <Outlet />
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <Outlet />
+            <Footer />
+        </>
+    );
 };
 
 export default MainLayout;
