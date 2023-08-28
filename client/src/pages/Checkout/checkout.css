@@ -12,3 +12,7 @@ img {
    width: 200px; 
 }
 
+.title {
+    font-size: 6vh;
+    color: darkblue;
+}

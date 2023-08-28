@@ -11,10 +11,10 @@ const Checkout = () => {
     <div className='content'>
     <div className='container-md w-75'> 
 
-    <h1 className='pb-4'> <BiLock /> Secure Checkout</h1>
+    <h1 className='pb-4 title'> <BiLock /> Secure Checkout</h1>
 
     <Row xs="2">
-    <Col className="bg-light border">
+    <Col className="bg-light border p-4">
 
           <Form>
           <h3 className='pt-4'>Shipping Info</h3>
@@ -176,7 +176,7 @@ const Checkout = () => {
 
 
 
-   <div class="m-checkout__form-header cart-items">
+  <div class="m-checkout__form-header cart-items">
 <h3 class="h__h3">
 Your Cart
 <span>

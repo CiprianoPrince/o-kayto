@@ -1,15 +1,16 @@
 import { Routes, Route } from "react-router-dom"
 import MainLayout from "./components/layout/Frontend/Layout"
 import Home from "./pages/Home/Home"
-// import Checkout from "./pages/Checkout/Checkout"
+import Checkout from "./pages/Checkout/Checkout"
 import Payment from "./pages/Checkout/Payment"
+import Successful from "./pages/Checkout/Successful"
 
 import Collection from "./pages/Collection/Collection"
 import About from "./pages/About/About"
 import Contact from "./pages/Contact/Contact"
 import Cart from "./pages/Cart/Cart"
 import Wishlist from "./pages/Wishlist/Wishlist"
-import Checkout from "./pages/Checkout/Checkout"
+
 import Settings from "./pages/Settings/Settings"
 import Signin from "./pages/Signin/Signin"
 import Signup from "./pages/Signup/Signup"
@@ -28,6 +29,7 @@ function App() {
           {/* <Route path='wishlist' element={<Wishlist />} /> */}
           <Route path='Checkout' element={<Checkout />} />
           {/* <Route path='Payment' element={<Payment/>} /> */}
+          {/* <Route path='Successful' element={<Successful/>} /> */}
           {/* <Route path='settings' element={<Settings />} /> */}  
           {/* <Route path='admin' element={<Admin />} /> */}
         </Route>

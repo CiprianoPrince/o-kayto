@@ -1,0 +1,20 @@
+* {
+    box-sizing: border-box;
+  }
+.container1 {
+    display: flex;
+    align-items: center;
+    padding-top: 10vh;
+    height: 100vh;
+    flex-direction: column;
+    background-color: whitesmoke   
+}
+.img-success { 
+    width: 100vh;
+    
+    }
+
+.title {
+    font-size: 6vh;
+    color: darkblue;
+}

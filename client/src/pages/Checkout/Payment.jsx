@@ -15,7 +15,7 @@ const Payment = () => {
         <h1>o-Kayto!</h1>
     </div>
 
-    <Card className='cardstyle' style={{ width: '50rem' }}>
+    <Card className='cardstyle' style={{ width: '53rem' }}>
       <ListGroup variant="flush">
 
         <ListGroup.Item><div class="info text-center">
