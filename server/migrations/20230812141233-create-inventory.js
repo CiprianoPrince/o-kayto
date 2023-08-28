@@ -9,14 +9,6 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
             },
-            productID: {
-                allowNull: false,
-                type: Sequelize.UUID,
-                references: {
-                    model: 'products',
-                    key: 'productID',
-                },
-            },
             variantID: {
                 allowNull: false,
                 type: Sequelize.UUID,
@@ -24,6 +16,7 @@ module.exports = {
                     model: 'variants',
                     key: 'variantID',
                 },
+                onDelete: 'CASCADE',
             },
             quantityInStock: {
                 allowNull: false,

@@ -57,11 +57,11 @@ const baseQuery = fetchBaseQuery({
 });
 
 // Handle the refresh logic
-const handleRefresh = async (api, extraOptions) => {
+export const handleRefresh = async (api, extraOptions) => {
     console.log('sending refresh token');
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
     if (refreshResult?.data) {
-        // const user = api.getState().auth.user;
+        console.log(refreshResult);
         // store the new token
         api.dispatch(setCredentials(refreshResult.data));
         return true; // Indicates successful refresh

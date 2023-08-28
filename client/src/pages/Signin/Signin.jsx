@@ -72,10 +72,7 @@ const Signin = () => {
                     >
                         <div>
                             <label className="form-label | block" htmlFor="email">
-                                Email address{' '}
-                                <span className="text-xs text-rose-600">
-                                    {errors?.email?.message}
-                                </span>
+                                Email address
                             </label>
                             <input
                                 className="form-control | px-3 py-2"
@@ -83,16 +80,13 @@ const Signin = () => {
                                 type="email"
                                 id="email"
                                 placeholder="Enter your registered email"
-                                value="prince@gmail.com"
                             />
+                            <span className="text-xs text-rose-600">{errors?.email?.message}</span>
                         </div>
 
                         <div>
                             <label className="form-label | block" htmlFor="password">
-                                Password{' '}
-                                <span className="text-xs text-rose-600">
-                                    {errors?.password?.message}
-                                </span>
+                                Password
                             </label>
                             <input
                                 className="form-control | px-3 py-2"
@@ -100,8 +94,10 @@ const Signin = () => {
                                 type="password"
                                 id="password"
                                 placeholder="Enter your password"
-                                value="Password69"
                             />
+                            <span className="text-xs text-rose-600">
+                                {errors?.password?.message}
+                            </span>
                         </div>
 
                         <div>

@@ -19,7 +19,7 @@ module.exports = {
             },
             price: {
                 allowNull: false,
-                type: Sequelize.INTEGER,
+                type: Sequelize.DECIMAL(10, 2),
             },
             categoryID: {
                 allowNull: false,

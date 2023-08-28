@@ -5,7 +5,9 @@ const DropDownContainer = ({ children }) => {
             aria-label="main"
         >
             <ul className="flex flex-col space-x-4">
-                <li className="text-lg font-semibold ">{children.map((child) => child)}</li>
+                <li className="text-lg font-semibold ">
+                    {Array.isArray(children) ? children.map((child) => child) : children}
+                </li>
             </ul>
         </nav>
     );

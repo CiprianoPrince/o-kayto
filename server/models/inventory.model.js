@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.belongsTo(models.Product, { foreignKey: 'productID' });
-            this.belongsTo(models.Variant, { foreignKey: 'variantID' });
+            this.belongsTo(models.Variant, { foreignKey: 'variantID', onDelete: 'CASCADE' });
         }
     }
     Inventory.init(
@@ -21,14 +20,6 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            productID: {
-                allowNull: false,
-                type: DataTypes.UUID,
-                references: {
-                    model: 'products',
-                    key: 'productID',
-                },
-            },
             variantID: {
                 allowNull: false,
                 type: DataTypes.UUID,
@@ -36,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
                     model: 'variants',
                     key: 'variantID',
                 },
+                onDelete: 'CASCADE',
+                onUpdate: 'CASCADE',
             },
             quantityInStock: {
                 allowNull: false,

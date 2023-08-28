@@ -71,6 +71,21 @@ module.exports = (sequelize, DataTypes) => {
                         role: role,
                     });
                 },
+                beforeDestroy: async (user, options) => {
+                    // Assuming that the role is stored in `options.role`
+                    // You can adjust this according to how you are passing the role
+                    const { sequelize } = user;
+
+                    // delete associated Profile
+                    await sequelize.models.Profile.destroy({
+                        where: { userID: user.userID },
+                    });
+
+                    // delete associated RefreshToken
+                    await sequelize.models.RefreshToken.destroy({
+                        where: { userID: user.userID },
+                    });
+                },
             },
         }
     );

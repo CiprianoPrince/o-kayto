@@ -9,5 +9,6 @@ export { default as Contact } from './contact/Contact';
 export { default as Home } from './home/Home';
 export { default as Signin } from './signin/Signin';
 export { default as Signup } from './signup/Signup';
+export { default as Signout } from './signout/Signout';
 export { default as Wishlist } from './wishlist/Wishlist';
 export { default as Term } from './term/Term';

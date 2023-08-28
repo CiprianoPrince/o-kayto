@@ -32,6 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: 'Category',
+            hooks: {
+                beforeDestroy: async (category, options) => {
+                    const { sequelize } = category;
+
+                    // Delete associated Products
+                    await sequelize.models.Product.destroy({
+                        where: { categoryID: category.categoryID },
+                    });
+                },
+            },
         }
     );
     return Category;

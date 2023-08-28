@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.hasMany(models.ProductSize, { foreignKey: 'sizeID' });
+            this.hasMany(models.ProductVariant, { foreignKey: 'sizeID' });
         }
     }
     Size.init(
@@ -20,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            sizeName: {
+            name: {
                 allowNull: false,
-                type: DataTypes.STRING,
+                type: DataTypes.ENUM,
+                values: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
             },
         },
         {

@@ -6,6 +6,7 @@ import ProductList from './ProductList';
 import Pagination from './Pagination';
 
 const AllProduct = ({ categoryParam }) => {
+
     return (
         <main>
             <section className="container mx-auto space-y-4 px-4 py-8">

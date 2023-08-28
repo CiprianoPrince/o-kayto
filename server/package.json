@@ -7,7 +7,7 @@
     "license": "ISC",
     "description": "",
     "scripts": {
-        "serve": "nodemon server.js",
+        "dev": "nodemon server.js",
         "pretty": "npx prettier */**/**/*.{js,cjs,ejs,ts} --write",
         "migrateUp": "npx sequelize-cli db:migrate",
         "migrateDown": "npx sequelize-cli db:migrate:undo:all",

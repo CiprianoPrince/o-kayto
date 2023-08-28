@@ -84,25 +84,28 @@ const ROLELIST = require('../constant/ROLELIST');
 //     }
 // };
 
-exports.handleLogin = async (req, res) => {
-    const { email, password } = req.body;
+exports.handleLogin = async (request, response) => {
+    const { email, password } = request.body;
+    console.log(email, password);
 
     // Check for email and password in request body
     if (!email || !password) {
-        return res.status(400).json({ message: 'Username and password are required.' });
+        return response.status(400).json({ message: 'Username and password are required.' });
     }
 
     // Find user by email
     const foundUser = await UserModel.findOne({ where: { email } });
-    if (!foundUser) return res.sendStatus(401); //Unauthorized
+    if (!foundUser) return response.sendStatus(401); //Unauthorized
 
     // Check password
     const match = await bcrypt.compare(password, foundUser.password);
-    if (!match) return res.sendStatus(401); // Unauthorized
+    if (!match) return response.sendStatus(401); // Unauthorized
 
     // Get user role
-    const foundUserRole = await foundUser.getProfile().role;
-    const role = ROLELIST[foundUserRole];
+    const foundUserWithRole = await foundUser.getProfile();
+    const role = ROLELIST[foundUserWithRole.role];
+
+    console.log(foundUserWithRole.role);
 
     // Create JWTs
     const accessToken = jwt.sign(
@@ -113,7 +116,7 @@ exports.handleLogin = async (req, res) => {
             },
         },
         process.env.ACCESS_TOKEN,
-        { expiresIn: '15' }
+        { expiresIn: '1d' }
     );
 
     const refreshToken = jwt.sign(
@@ -128,8 +131,8 @@ exports.handleLogin = async (req, res) => {
     foundUser.createRefreshToken({ token: refreshToken });
 
     // Check for possible token reuse and handle accordingly
-    if (req.cookies?.jwt) {
-        const existingToken = req.cookies.jwt;
+    if (request.cookies?.jwt) {
+        const existingToken = request.cookies.jwt;
         const foundToken = await RefreshTokenModel.findOne({ where: { token: existingToken } });
 
         // Detected refresh token reuse!
@@ -139,12 +142,11 @@ exports.handleLogin = async (req, res) => {
             RefreshTokenModel.destroy({ where: { userID: foundUser.userID } });
         }
 
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+        response.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     }
 
-    console.log('here is the cookie:', refreshToken)
     // Set cookie for refresh token
-    res.cookie('jwt', refreshToken, {
+    response.cookie('jwt', refreshToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'None',
@@ -152,5 +154,5 @@ exports.handleLogin = async (req, res) => {
     });
 
     // Send access token to user
-    res.send({ accessToken });
+    response.send({ accessToken });
 };

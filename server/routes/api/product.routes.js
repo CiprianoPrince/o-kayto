@@ -1,8 +1,11 @@
+const ROLELIST = require('../../constant/ROLELIST');
+
 module.exports = (app) => {
+    const multer = require('../../middleware/multer/productMulter.middleware');
+    const verifyRoles = require('../../middleware/verifyRoles.middleware');
+    const ROLELIST = require('../../constant/ROLELIST');
     const controller = require('../../controllers/product.controller');
     const validator = require('../../validators/product.validator');
-    const upload = require('../../middleware/Multer/multer');
-
     const router = require('express').Router();
 
     // Retrieve all products.
@@ -12,10 +15,28 @@ module.exports = (app) => {
     router.get('/:productID', controller.findByPk);
 
     // Add a new product.
-    router.post('/', upload.single('image'), controller.createOne);
+    router.post(
+        '/',
+        verifyRoles(ROLELIST.Admin),
+        multer.single('productImage'),
+        validator.validateName,
+        validator.validateDescription,
+        validator.validatePrice,
+        validator.validateCategoryID,
+        controller.createOne
+    );
 
     //  Update a product's details.
-    router.put('/:productID', upload.single('image'), controller.updateOne);
+    router.put(
+        '/:productID',
+        verifyRoles(ROLELIST.Admin),
+        multer.single('productImage'),
+        validator.validateName,
+        validator.validateDescription,
+        validator.validatePrice,
+        validator.validateCategoryID,
+        controller.updateOne
+    );
 
     //  Delete a product.
     router.delete('/:productID', controller.deleteOne);

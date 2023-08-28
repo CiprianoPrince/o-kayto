@@ -16,6 +16,7 @@ module.exports = {
                     model: 'carts',
                     key: 'cartID',
                 },
+                onDelete: 'CASCADE',
             },
             productID: {
                 allowNull: false,
@@ -24,6 +25,7 @@ module.exports = {
                     model: 'products',
                     key: 'productID',
                 },
+                onDelete: 'CASCADE',
             },
             quantity: {
                 allowNull: false,

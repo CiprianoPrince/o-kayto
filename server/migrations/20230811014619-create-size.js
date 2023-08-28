@@ -9,9 +9,10 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
             },
-            sizeName: {
+            name: {
                 allowNull: false,
-                type: Sequelize.STRING,
+                type: Sequelize.ENUM,
+                values: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
             },
             createdAt: {
                 allowNull: false,

@@ -1,23 +1,51 @@
+// Import necessary modules
 const db = require('../models');
+const { col } = require('sequelize');
 const ProductModel = db.Product;
-const ImageModel = db.Image;
+const ProductImageModel = db.ProductImage;
+const ProductVariantModel = db.ProductVariant;
+const VariantModel = db.Variant;
+const SizeModel = db.Size;
+const ColorModel = db.Color;
+const InventoryModel = db.Inventory;
 
 const { ValidationError } = require('sequelize');
-
 const { validationResult } = require('express-validator');
-
 const { StatusCodes } = require('http-status-codes');
 
+// Import helper functions
 const sendResponse = require('../helpers/sendResponse');
 const generateMessage = require('../helpers/generateMessage');
 const getModelName = require('../helpers/getModelName');
 
+// Fetch the model name based on the filename
 const modelName = getModelName(__filename);
 
+// Fetch all products
 exports.findAll = async (request, response) => {
     try {
-        const products = await ProductModel.findAll();
-        if (!products.length) {
+        // Fetch all products from the database
+        const foundProducts = await ProductModel.findAll({
+            include: [
+                {
+                    model: ProductImageModel,
+                    attributes: [], // Exclude default attributes
+                },
+                {
+                    model: ProductVariantModel,
+                    attributes: ['ProductID'], // Exclude default attributes
+                    include: [
+                        {
+                            model: SizeModel,
+                            attributes: ['name'],
+                        },
+                    ],
+                },
+            ],
+        });
+
+        // If there are no products, send NO_CONTENT status code
+        if (!foundProducts.length) {
             return sendResponse(
                 response,
                 StatusCodes.NO_CONTENT,
@@ -25,17 +53,34 @@ exports.findAll = async (request, response) => {
             );
         }
 
+        // // Transform rawProducts to desired structure
+        // const transformedProducts = foundProducts.map((product) => {
+        //     return {
+        //         ...product,
+        //         imagePath: product['ProductImage.imagePath'],
+        //         altText: product['ProductImage.altText'],
+        //     };
+        // });
+
+        // // Remove the unwanted keys
+        // transformedProducts.forEach((product) => {
+        //     delete product['ProductImage.imagePath'];
+        //     delete product['ProductImage.altText'];
+        // });
+
+        // Send fetched products with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
-            generateMessage.findAll.success(modelName, products.length),
-            products
+            generateMessage.findAll.success(modelName, foundProducts.length),
+            foundProducts
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error
         }
-
+        console.log(error);
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -47,10 +92,15 @@ exports.findAll = async (request, response) => {
     }
 };
 
+// Fetch product by primary key
 exports.findByPk = async (request, response) => {
     try {
+        // Extract product ID from request params
         const productID = request.params.productID;
+        // Fetch the product with the specified ID
         const dbProductData = await ProductModel.findByPk(productID);
+
+        // If product not found, send BAD_REQUEST status code
         if (!dbProductData) {
             return sendResponse(
                 response,
@@ -58,6 +108,8 @@ exports.findByPk = async (request, response) => {
                 generateMessage.findByPk.missingID(modelName, productID)
             );
         }
+
+        // Send fetched product data with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
@@ -66,8 +118,10 @@ exports.findByPk = async (request, response) => {
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error
         }
+
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -79,9 +133,12 @@ exports.findByPk = async (request, response) => {
     }
 };
 
+// Create a new product
 exports.createOne = async (request, response) => {
+    // Validate the request data
     const errors = validationResult(request);
 
+    // If validation errors exist, send BAD_REQUEST status code
     if (!errors.isEmpty()) {
         return sendResponse(
             response,
@@ -93,15 +150,28 @@ exports.createOne = async (request, response) => {
     }
 
     try {
-        const rawProductData = request.body;
+        // Extract product data from request body
+        // const rawProductData = request.body;
+        // Create a new product in the database
+        // const dbProductData = await ProductModel.create(rawProductData);
 
-        // await ImageModel.create({
-        //   productID: product.productID,
-        //   imagePath: req.file.filename, // Get the filename from the uploaded file
-        //   altText: `Image for ${name}`, // This is just an example. You can set it to whatever you want.
-        // });
+        // Extract variant data from request body
+        const productData = request.body;
+        const imagePath = request.file.filename;
 
-        const dbProductData = await ProductModel.create(rawProductData);
+        const extraData = {
+            image: {
+                imagePath: imagePath,
+                altText: `${productData.name} Image`,
+            },
+        };
+
+        // Create a new variant for the product
+        const dbProductData = await ProductModel.create(productData, {
+            extraData: extraData,
+        });
+
+        // Send the created product data with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
@@ -110,8 +180,10 @@ exports.createOne = async (request, response) => {
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error
         }
+
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -123,9 +195,12 @@ exports.createOne = async (request, response) => {
     }
 };
 
+// Update a product by primary key
 exports.updateOne = async (request, response) => {
+    // Validate the request data
     const errors = validationResult(request);
 
+    // If validation errors exist, send BAD_REQUEST status code
     if (!errors.isEmpty()) {
         return sendResponse(
             response,
@@ -137,19 +212,16 @@ exports.updateOne = async (request, response) => {
     }
 
     try {
+        // Extract product ID and data from request
         const productID = request.params.productID;
         const rawProductData = request.body;
 
+        // Update the product with the specified ID
         const [affectedRows] = await ProductModel.update(rawProductData, {
             where: { productID },
         });
 
-        // await ImageModel.create({
-        //   productID: product.productID,
-        //   imagePath: req.file.filename, // Get the filename from the uploaded file
-        //   altText: `Image for ${name}`, // This is just an example. You can set it to whatever you want.
-        // });
-
+        // If no rows affected, send BAD_REQUEST status code
         if (!affectedRows) {
             return sendResponse(
                 response,
@@ -158,13 +230,16 @@ exports.updateOne = async (request, response) => {
             );
         }
 
+        // Send affected rows count with OK status code
         sendResponse(response, StatusCodes.OK, generateMessage.updateOne.success(modelName), {
             affectedRows,
         });
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error
         }
+
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -176,11 +251,16 @@ exports.updateOne = async (request, response) => {
     }
 };
 
+// Delete a product by primary key
 exports.deleteOne = async (request, response) => {
     try {
+        // Extract product ID from request params
         const productID = request.params.productID;
 
+        // Delete the product with the specified ID
         const deletedRows = await ProductModel.destroy({ where: { productID } });
+
+        // If no rows deleted, send BAD_REQUEST status code
         if (!deletedRows) {
             return sendResponse(
                 response,
@@ -188,13 +268,17 @@ exports.deleteOne = async (request, response) => {
                 generateMessage.deleteOne.missingID(modelName)
             );
         }
+
+        // Send deleted rows count with OK status code
         sendResponse(response, StatusCodes.OK, generateMessage.deleteOne.success(modelName), {
             deletedRows,
         });
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error
         }
+
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,

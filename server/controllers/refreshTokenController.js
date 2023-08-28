@@ -130,7 +130,7 @@ exports.handleRefreshToken = async (req, res) => {
                 },
             },
             process.env.ACCESS_TOKEN,
-            { expiresIn: '15m' }
+            { expiresIn: '1d' }
         );
 
         // Create a new refresh token

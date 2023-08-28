@@ -2,7 +2,7 @@ const capitalizeFirstLetter = require('../utils/capitalizeFirstLetter');
 
 module.exports = {
     all: {
-        emptyData: 'Fields should not be empty or have an incorrect format.',
+        emptyData: () => 'Fields should not be empty or have an incorrect format.',
     },
     findAll: {
         success: (model, modellength) => `Successfully retrieved ${modellength} ${model}(s).`,

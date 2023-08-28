@@ -1,21 +1,24 @@
+// Importing necessary modules
 const db = require('../models');
 const CategoryModel = db.Category;
-
 const { ValidationError } = require('sequelize');
-
 const { validationResult } = require('express-validator');
-
 const { StatusCodes } = require('http-status-codes');
 
+// Importing helper functions
 const sendResponse = require('../helpers/sendResponse');
 const generateMessage = require('../helpers/generateMessage');
 const getModelName = require('../helpers/getModelName');
 
+// Fetching the model name based on the filename
 const modelName = getModelName(__filename);
 
+// Fetch all categories
 exports.findAll = async (request, response) => {
     try {
         const categories = await CategoryModel.findAll();
+        
+        // If there are no categories, send NO_CONTENT status code
         if (!categories.length) {
             return sendResponse(
                 response,
@@ -24,6 +27,7 @@ exports.findAll = async (request, response) => {
             );
         }
 
+        // Send fetched categories with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
@@ -32,9 +36,9 @@ exports.findAll = async (request, response) => {
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error (currently not handling, but can be expanded)
         }
-
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -46,10 +50,13 @@ exports.findAll = async (request, response) => {
     }
 };
 
+// Fetch category by primary key
 exports.findByPk = async (request, response) => {
     try {
         const categoryID = request.params.categoryID;
         const dbCategoryData = await CategoryModel.findByPk(categoryID);
+        
+        // If category not found, send BAD_REQUEST status code
         if (!dbCategoryData) {
             return sendResponse(
                 response,
@@ -57,6 +64,8 @@ exports.findByPk = async (request, response) => {
                 generateMessage.findByPk.missingID(modelName, categoryID)
             );
         }
+        
+        // Send fetched category data with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
@@ -65,8 +74,9 @@ exports.findByPk = async (request, response) => {
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error (currently not handling, but can be expanded)
         }
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -78,9 +88,12 @@ exports.findByPk = async (request, response) => {
     }
 };
 
+// Create a new category
 exports.createOne = async (request, response) => {
+    // Validate the request data
     const errors = validationResult(request);
-
+    
+    // If validation errors exist, send BAD_REQUEST status code
     if (!errors.isEmpty()) {
         return sendResponse(
             response,
@@ -94,6 +107,8 @@ exports.createOne = async (request, response) => {
     try {
         const rawCategoryData = request.body;
         const dbCategoryData = await CategoryModel.create(rawCategoryData);
+        
+        // Send created category data with OK status code
         sendResponse(
             response,
             StatusCodes.OK,
@@ -102,8 +117,9 @@ exports.createOne = async (request, response) => {
         );
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error (currently not handling, but can be expanded)
         }
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -115,9 +131,12 @@ exports.createOne = async (request, response) => {
     }
 };
 
+// Update a category by primary key
 exports.updateOne = async (request, response) => {
+    // Validate the request data
     const errors = validationResult(request);
-
+    
+    // If validation errors exist, send BAD_REQUEST status code
     if (!errors.isEmpty()) {
         return sendResponse(
             response,
@@ -132,10 +151,12 @@ exports.updateOne = async (request, response) => {
         const categoryID = request.params.categoryID;
         const rawCategoryData = request.body;
 
+        // Update the category data
         const [affectedRows] = await CategoryModel.update(rawCategoryData, {
             where: { categoryID },
         });
 
+        // If no rows affected, send BAD_REQUEST status code
         if (!affectedRows) {
             return sendResponse(
                 response,
@@ -144,13 +165,15 @@ exports.updateOne = async (request, response) => {
             );
         }
 
+        // Send affected rows count with OK status code
         sendResponse(response, StatusCodes.OK, generateMessage.updateOne.success(modelName), {
             affectedRows,
         });
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error (currently not handling, but can be expanded)
         }
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,
@@ -162,11 +185,15 @@ exports.updateOne = async (request, response) => {
     }
 };
 
+// Delete a category by primary key
 exports.deleteOne = async (request, response) => {
     try {
         const categoryID = request.params.categoryID;
 
+        // Delete the category
         const deletedRows = await CategoryModel.destroy({ where: { categoryID } });
+        
+        // If no rows deleted, send BAD_REQUEST status code
         if (!deletedRows) {
             return sendResponse(
                 response,
@@ -174,13 +201,16 @@ exports.deleteOne = async (request, response) => {
                 generateMessage.deleteOne.missingID(modelName)
             );
         }
+        
+        // Send deleted rows count with OK status code
         sendResponse(response, StatusCodes.OK, generateMessage.deleteOne.success(modelName), {
             deletedRows,
         });
     } catch (error) {
         if (error instanceof ValidationError) {
-            // handle validation error
+            // Handle validation error (currently not handling, but can be expanded)
         }
+        // Send INTERNAL_SERVER_ERROR status code for other errors
         sendResponse(
             response,
             StatusCodes.INTERNAL_SERVER_ERROR,

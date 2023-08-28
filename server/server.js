@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 // External dependencies
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -31,12 +32,12 @@ app.use(credentials);
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
-app.use(
-    rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100,
-    })
-);
+// app.use(
+//     rateLimit({
+//         windowMs: 15 * 60 * 1000, // 15 minutes
+//         max: 100,
+//     })
+// );
 app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -48,6 +49,16 @@ db.sequelize
     .then(() => console.log('Database synced successfully.'))
     .catch((err) => console.error('Error syncing database:', err));
 
+// Serve static images
+app.use(
+    '/storage/uploads/images',
+    (request, response, next) => {
+        response.header('Cross-Origin-Resource-Policy', 'cross-origin');
+        next();
+    },
+    express.static(path.join(__dirname, 'storage/uploads/images'))
+);
+
 // Routes
 require('./routes/auth.routes')(app);
 require('./routes/register.routes')(app);
@@ -56,6 +67,10 @@ require('./routes/logout.routes')(app);
 
 // JWT Verification for API routes
 app.use(verifyJWT);
+require('./routes/api/variant.routes')(app);
+require('./routes/api/product.routes')(app);
+require('./routes/api/category.routes')(app);
+require('./routes/api/color.routes')(app);
 
 // Start server
 const PORT = process.env.PORT || 8000;

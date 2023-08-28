@@ -16,6 +16,7 @@ module.exports = {
                     model: 'orders',
                     key: 'orderID',
                 },
+                onDelete: 'CASCADE',
             },
             productID: {
                 allowNull: false,

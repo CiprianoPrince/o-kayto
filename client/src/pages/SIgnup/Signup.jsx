@@ -1,39 +1,86 @@
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useForm, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSignupMutation } from '../../features/auth/authApiSlice';
+import { toFormData } from '../../utils/object';
 
-const schema = z.object({
-    email: z
-        .string()
-        .email('Please enter a valid email address.')
-        .transform((val) => val.trim()),
+const passwordMatches = (val) => {
+    const { password, confirmPassword } = val;
+    return password === confirmPassword;
+};
 
-    password: z
-        .string()
-        .min(8, 'Password should be at least 8 characters long.')
-        .refine(
-            (password) => /[A-Z]/.test(password),
-            'Password should contain at least one uppercase letter.'
-        )
-        .refine(
-            (password) => /[a-z]/.test(password),
-            'Password should contain at least one lowercase letter.'
-        )
-        .refine(
-            (password) => /[0-9]/.test(password),
-            'Password should contain at least one number.'
-        )
-        .transform((val) => val.trim()),
-});
+const schema = z
+    .object({
+        email: z.string().trim().email('Please enter a valid email address.'),
+
+        firstName: z.string().trim().min(1, 'First name should not be empty.'),
+        lastName: z.string().trim().min(1, 'Last name should not be empty.'),
+        password: z
+            .string()
+            .trim()
+            .min(8, 'Password should be at least 8 characters long.')
+            .refine(
+                (password) => /[A-Z]/.test(password),
+                'Password should contain at least one uppercase letter.'
+            )
+            .refine(
+                (password) => /[a-z]/.test(password),
+                'Password should contain at least one lowercase letter.'
+            )
+            .refine(
+                (password) => /[0-9]/.test(password),
+                'Password should contain at least one number.'
+            ),
+
+        confirmPassword: z
+            .string()
+            .trim()
+            .min(8, 'Confirm password should be at least 8 characters long.')
+            .refine(
+                (password) => /[A-Z]/.test(password),
+                'Password should contain at least one uppercase letter.'
+            )
+            .refine(
+                (password) => /[a-z]/.test(password),
+                'Password should contain at least one lowercase letter.'
+            )
+            .refine(
+                (password) => /[0-9]/.test(password),
+                'Password should contain at least one number.'
+            ),
+    })
+    .refine(passwordMatches, {
+        message: 'Password and Confirm Password should be the same.',
+        path: ['confirmPassword'],
+    });
 
 const Signup = () => {
-    const { register, handleSubmit, formState, reset } = useForm({
+    const { register, handleSubmit, control, formState, reset } = useForm({
         resolver: zodResolver(schema),
     });
-    const { error } = formState;
 
-    const handleFormData = () => {};
+    const {
+        field: { ref, value, ...inputProps },
+    } = useController({ name: 'avatar', control, defaultValue: '' });
+
+    const { errors } = formState;
+
+    const [signup] = useSignupMutation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location?.state?.from || '/';
+
+    const toSubmit = async (data, event) => {
+        try {
+            const result = await signup(data).unwrap();
+            console.log(result);
+            event.target.reset();
+            navigate(from, { replace: from === '/' ? false : true });
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <main>
@@ -43,7 +90,7 @@ const Signup = () => {
                     <p className="mb-4 text-center font-semibold text-secondary-950">
                         Already have an account?{' '}
                         <Link
-                            className="[ ] text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                            className="text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
                             to="/signin"
                         >
                             Log in.
@@ -51,9 +98,10 @@ const Signup = () => {
                     </p>
                     <form
                         className="flex flex-col space-y-4"
-                        onSubmit={handleSubmit(handleFormData)}
+                        onSubmit={handleSubmit(toSubmit)}
+                        encType="multipart/form-data"
                     >
-                        <div className="flex gap-4">
+                        <div className="flex flex-col gap-4 md:flex-row">
                             <div className="flex-1">
                                 <label className="form-label | block" htmlFor="firstName">
                                     First name
@@ -63,8 +111,12 @@ const Signup = () => {
                                     type="text"
                                     {...register('firstName')}
                                     id="firstName"
-                                    placeholder="John"
+                                    placeholder="Your first name"
+                                    value="Prince"
                                 />
+                                <span className="text-xs text-rose-600">
+                                    {errors?.firstName?.message}
+                                </span>
                             </div>
 
                             <div className="flex-1">
@@ -76,8 +128,12 @@ const Signup = () => {
                                     type="text"
                                     {...register('lastName')}
                                     id="lastName"
-                                    placeholder="Doe"
+                                    placeholder="Your last name"
+                                    value="Cipriano"
                                 />
+                                <span className="text-xs text-rose-600">
+                                    {errors?.lastName?.message}
+                                </span>
                             </div>
                         </div>
 
@@ -90,8 +146,10 @@ const Signup = () => {
                                 type="email"
                                 {...register('email')}
                                 id="email"
-                                placeholder="john.doe@example.com"
+                                placeholder="Your email address"
+                                value="dog@gmail.com"
                             />
+                            <span className="text-xs text-rose-600">{errors?.email?.message}</span>
                         </div>
 
                         <div>
@@ -103,8 +161,12 @@ const Signup = () => {
                                 type="password"
                                 {...register('password')}
                                 id="password"
-                                placeholder="******"
+                                placeholder="Create your password"
+                                value="Password69"
                             />
+                            <span className="text-xs text-rose-600">
+                                {errors?.password?.message}
+                            </span>
                         </div>
 
                         <div>
@@ -116,8 +178,12 @@ const Signup = () => {
                                 type="password"
                                 {...register('confirmPassword')}
                                 id="confirmPassword"
-                                placeholder="******"
+                                placeholder="Confirm your password"
+                                value="Password69"
                             />
+                            <span className="text-xs text-rose-600">
+                                {errors?.confirmPassword?.message}
+                            </span>
                         </div>
 
                         <div>
@@ -134,14 +200,14 @@ const Signup = () => {
                             <p className="block whitespace-pre-line text-center font-semibold text-secondary-500">
                                 By clicking Create Account, you are agreeing to our{' '}
                                 <Link
-                                    className="[ ] text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                                    className="text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
                                     to="terms"
                                 >
                                     Terms & Conditions
                                 </Link>{' '}
                                 and{' '}
                                 <Link
-                                    className="[ ] text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                                    className="text-accent-500 hover:text-accent-800 focus:outline-none focus:ring-2 focus:ring-accent-500"
                                     to="terms"
                                 >
                                     Privacy Policy

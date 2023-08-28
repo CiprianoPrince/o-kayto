@@ -13,11 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.CartDetail, { foreignKey: 'productID' });
             this.hasMany(models.OrderDetail, { foreignKey: 'productID' });
             this.hasMany(models.WishlistDetail, { foreignKey: 'productID' });
-            this.hasMany(models.ProductSize, { foreignKey: 'productID' });
             this.hasMany(models.SaleDetail, { foreignKey: 'saleID' });
             this.hasMany(models.Variant, { foreignKey: 'productID' });
-            this.hasOne(models.Inventory, { foreignKey: 'productID' });
-            this.hasOne(models.Image, { foreignKey: 'productID' });
+            this.hasOne(models.ProductImage, { foreignKey: 'productID' });
+            this.hasMany(models.ProductVariant, { foreignKey: 'productID' });
         }
     }
     Product.init(
@@ -38,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             price: {
                 allowNull: false,
-                type: DataTypes.INTEGER,
+                type: DataTypes.DECIMAL(10, 2),
             },
             categoryID: {
                 allowNull: false,
@@ -48,18 +47,32 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'categoryID',
                 },
             },
-            createdAt: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
-            updatedAt: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
         },
         {
             sequelize,
             modelName: 'Product',
+            hooks: {
+                afterCreate: async (product, options) => {
+                    const { sequelize } = product;
+
+                    // Accessing extra data from options
+                    const imageData = options.extraData.image;
+
+                    // Create associated Image
+                    await sequelize.models.ProductImage.create({
+                        ...imageData,
+                        productID: product.productID,
+                    });
+                },
+                beforeDestroy: async (product, options) => {
+                    const { sequelize } = product;
+
+                    // Delete associated Variants
+                    await sequelize.models.Variant.destroy({
+                        where: { productID: product.productID },
+                    });
+                },
+            },
         }
     );
     return Product;
